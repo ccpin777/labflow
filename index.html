@@ -33,6 +33,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script src="app.js"></script>
-    <script>if ("serviceWorker" in navigator && (location.protocol === "http:" || location.protocol === "https:")) navigator.serviceWorker.register("sw.js").catch(() => {});</script>
+    <script>if ("serviceWorker" in navigator && (location.protocol === "http:" || location.protocol === "https:")) { navigator.serviceWorker.getRegistrations().then(registrations => registrations.forEach(registration => registration.unregister())); if ("caches" in window) caches.keys().then(keys => keys.forEach(key => caches.delete(key))); }</script>
   </body>
 </html>
