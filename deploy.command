@@ -7,12 +7,15 @@ git config user.name "Pin"
 git config user.email "ccpin777@hotmail.com"
 git branch -M main
 
+read -r -p "What did you change? " CHANGE_NOTE
+CHANGE_NOTE=${CHANGE_NOTE:-Update LabFlow}
+
 echo "Adding LabFlow changes..."
 git add -A
 if git diff --cached --quiet; then
   echo "No new file changes to commit."
 else
-  git commit -m "Update LabFlow"
+  git commit -m "$CHANGE_NOTE"
 fi
 
 echo "Pushing to GitHub..."

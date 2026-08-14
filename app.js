@@ -2,7 +2,7 @@ const INITIAL_LABFLOW_DATA = { experiments: [], blocks: [] };
 const INITIAL_TEMPLATES = {};
 const INITIAL_MEASUREMENTS = { measurements: [], samples: [], cells: [] };
 const BROWSER_STATE_KEY = "labflow-browser-state-v1";
-const BROWSER_TEMPLATES_KEY = "labflow-browser-templates-v1";
+const BROWSER_TEMPLATES_KEY = "labflow-browser-templates-v2";
 const BROWSER_MEASUREMENTS_KEY = "labflow-browser-measurements-v1";
 function browserRead(key, fallback) { try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch (error) { return fallback; } }
 function browserWrite(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); return true; } catch (error) { toast("Could not save browser data"); return false; } }
