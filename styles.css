@@ -192,7 +192,7 @@ body { zoom: 1.1; }
 .calendar-shared-grid .day:last-child { border-right: 1px solid var(--line); }
 .calendar-shared-grid .day-timeline { min-height: 918px; }
 .calendar-shared-grid .event-body { display: none; }
-.calendar-shared-grid .calendar-event.occupied .event-body { display: block; }
+.calendar-shared-grid .calendar-event.occupied .event-body { display: none; }
 .calendar-shared-grid .calendar-event { padding: 5px 6px; font-size: 10px; }
 .calendar-shared-grid .calendar-event strong { font-size: 10px; line-height: 1.2; }
 .calendar-shared-grid .calendar-event.transition, .calendar-shared-grid .calendar-event.projected { left: 4px; right: 4px; padding: 4px 5px; }
@@ -239,7 +239,7 @@ html, body { overflow-x: hidden; }
 }
 
 /* Modals size against their backdrop, not 100vw (important with the app text zoom). */
-.modal-backdrop { box-sizing: border-box; overflow: hidden; padding: 20px; }
+.modal-backdrop { box-sizing: border-box; overflow: hidden; padding: 20px; z-index: 100; }
 .modal { width: min(520px, 100%); max-width: 100%; min-width: 0; box-sizing: border-box; overflow-x: hidden; overflow-y: auto; }
 .modal:has(#procedureForm) { width: min(760px, 100%); max-width: 100%; }
 .modal .form, .modal #sampleInputs, .modal #procedureStageRows { min-width: 0; max-width: 100%; }
