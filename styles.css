@@ -466,3 +466,11 @@ body.font-damion h1, body.font-damion .brand { font-family: "Damion", cursive; f
 .inline-plan-label { display:block; color:var(--muted); font-size:10px; margin-bottom:3px; }
 .inline-plan-time { width:138px; padding:5px 6px; border:1px solid var(--sage-dark); border-radius:7px; background:#fff; color:var(--ink); font:inherit; font-size:11px; }
 .detail-plan-note { color:var(--muted); font-size:11px; margin-top:-4px; }
+
+.auth-locked .topbar { display: none; }
+.auth-page { min-height: 70vh; display: grid; place-items: center; padding: 48px 20px; }
+.auth-card { width: min(420px, 100%); padding: 34px; background: var(--paper, #fff); border: 1px solid var(--line, #dfe4dc); border-radius: 18px; box-shadow: 0 18px 50px rgba(36, 48, 39, .08); }
+.auth-card h1 { margin: 0 0 8px; }
+.auth-card .subtle { margin-bottom: 24px; }
+.auth-actions { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.auth-error { color: #a33b32; min-height: 1.4em; margin-top: 12px; }
