@@ -725,3 +725,31 @@ button:disabled { cursor: wait; opacity: .72; }
     transform: none !important;
   }
 }
+
+/* Calendar header is outside the vertical scroller so it remains visible on mobile/PWA. */
+.calendar-grid-wrap {
+  overflow: hidden;
+}
+.calendar-grid-header-scroll {
+  width: 100%;
+  overflow: hidden;
+}
+.calendar-grid-header-scroll .calendar-shared-grid {
+  width: 100%;
+  min-width: 0;
+}
+.calendar-body-grid .day-head {
+  display: none;
+}
+.calendar-header-grid .day-head.today {
+  background: var(--sage);
+}
+@media (max-width: 900px) {
+  .calendar-grid-header-scroll .calendar-shared-grid {
+    width: max-content;
+    min-width: 975px;
+  }
+  .calendar-grid-scroll {
+    overflow: auto;
+  }
+}
