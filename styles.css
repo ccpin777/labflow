@@ -901,3 +901,15 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
   .measurement-board-table th:not(:first-child),
   .measurement-board-table td:not(:first-child) { width: 112px; min-width: 112px; }
 }
+
+
+@media (max-width:560px) {
+  .measurement-board-card { min-width: 0; }
+  .measurement-board-leading,
+  .measurement-legend,
+  .measurement-board-actions { min-width: 0; width: 100%; }
+  .measurement-legend { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px 12px; }
+  .measurement-legend span { min-width: 0; white-space: nowrap; }
+  .measurement-board-actions > button { box-sizing: border-box; padding: 9px 6px; font-size: 12px; line-height: 1.2; white-space: normal; overflow-wrap: anywhere; }
+  .measurement-board-actions .danger-icon-button { padding: 0; }
+}
