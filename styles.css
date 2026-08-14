@@ -923,3 +923,11 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
   .measurement-board-actions > button:nth-child(5) { display: none; }
   .measurement-board-actions > button:nth-child(3) { display: block; width: auto; }
 }
+
+@media (max-width:560px) {
+  /* Remove the hidden edit-control slot so sample names start at the edge. */
+  .measurement-board-table .sample-edit-controls.is-placeholder { display: none; }
+  .measurement-board-table .sample-row-content { gap: 0; }
+  .measurement-board-table tbody tr:not(.measurement-group-row) > th { padding-left: 4px; }
+  .measurement-board-table .sample-label { padding-left: 0; }
+}
