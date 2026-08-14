@@ -119,3 +119,14 @@ The Measurements table is a planning/checklist surface for arbitrary samples and
 - Flexible work is now added with `+ Lab block` beside `+ New experiment`.
 - Started considering Sample Measurement Groups for growing sample lists.
 - Stock Solution Calculation remains a separate offline-capable tool and may later be linked from the public login screen.
+
+### Recent follow-up
+
+- Kept a hybrid storage model: Supabase is the cross-device source of truth, while localStorage remains a browser-local cache and offline fallback.
+- Added cloud status feedback and account-isolation protection for local browser data.
+- Added password recovery, stronger new-password guidance, fixed Supabase SDK versioning, and escaped user-provided modal/calendar output.
+- Disabled the old cache-first Service Worker and added deployment asset versioning so updated JavaScript and CSS are fetched after each deployment.
+- Reworked the mobile top bar so Settings and Export remain visible while navigation scrolls horizontally.
+- Fixed Modal dismissal during text selection, copy, and cut actions.
+- Added `+ Lab block` beside `+ New experiment`; removed the Today-page Quick add block.
+- Confirmed that Sample Measurements Groups and the offline Stock Solution calculator remain future design work.
