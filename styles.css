@@ -398,6 +398,7 @@ html, body { overflow-x: hidden; }
 .measurement-check { display:inline-grid; place-items:center; cursor:pointer; }
 .measurement-check { width:25px; height:25px; padding:0; display:inline-grid; place-items:center; border:1px solid var(--line); border-radius:7px; color:var(--muted); background:transparent; font:inherit; font-size:15px; cursor:pointer; }
 .measurement-check.status-planned { border-color:#c5a86c; color:#927436; background:transparent; }
+.measurement-check.status-delegated { border-color:#8b76a8; color:#70558e; background:transparent; }
 .measurement-check.status-completed { border-color:var(--sage-dark); color:var(--sage-dark); background:transparent; }
 
 .measurement-panel-head > div { display:grid; gap:3px; }
