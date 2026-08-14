@@ -913,3 +913,13 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
   .measurement-board-actions > button { box-sizing: border-box; padding: 9px 6px; font-size: 12px; line-height: 1.2; white-space: normal; overflow-wrap: anywhere; }
   .measurement-board-actions .danger-icon-button { padding: 0; }
 }
+
+@media (max-width:560px) {
+  /* Mobile keeps daily status updates simple; structural editing stays on desktop. */
+  .measurement-board-actions { display: flex; width: auto; justify-content: flex-start; }
+  .measurement-board-actions > button:nth-child(1),
+  .measurement-board-actions > button:nth-child(2),
+  .measurement-board-actions > button:nth-child(4),
+  .measurement-board-actions > button:nth-child(5) { display: none; }
+  .measurement-board-actions > button:nth-child(3) { display: block; width: auto; }
+}
