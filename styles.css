@@ -671,3 +671,41 @@ button:disabled { cursor: wait; opacity: .72; }
     justify-content: flex-start;
   }
 }
+
+/* Mobile calendar: the inner panel owns both scroll axes so weekday headers can stay pinned. */
+@media (max-width: 900px) {
+  .calendar-grid-wrap {
+    overflow: hidden;
+  }
+
+  .calendar-grid-scroll {
+    overflow: auto;
+    position: relative;
+  }
+
+  .calendar-shared-grid .day,
+  .calendar-shared-grid .day-head,
+  .calendar-shared-grid .axis-spacer {
+    overflow: visible;
+  }
+
+  .calendar-shared-grid .day-head,
+  .calendar-shared-grid .axis-spacer {
+    position: sticky;
+    top: 0;
+  }
+
+  .calendar-shared-grid .day-head {
+    z-index: 30;
+    background: var(--paper);
+  }
+
+  .calendar-shared-grid .axis-spacer {
+    z-index: 31;
+    background: var(--paper);
+  }
+
+  .calendar-shared-grid .day.today .day-head {
+    background: var(--sage);
+  }
+}
