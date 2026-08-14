@@ -301,7 +301,7 @@ function renderMeasurementRows(editing) {
   measurementBoard.groups.forEach(group => {
     const indices = measurementBoard.samples.map((_, index) => index).filter(index => measurementBoard.sampleGroups[index] === group.id).filter(index => measurementBoardGroupFilter === "all" || measurementBoardGroupFilter === group.id);
     if (!indices.length) return;
-    html += '<tr class="measurement-group-row"><th colspan="' + (measurementBoard.measurements.length + 1) + '">' + escapeHtml(group.name) + ' <span class="count">(' + indices.length + ' samples)</span></th></tr>';
+    html += '<tr class="measurement-group-row"><th>' + escapeHtml(group.name) + ' <span class="count">(' + indices.length + ' samples)</span></th><td colspan="' + measurementBoard.measurements.length + '"></td></tr>';
     indices.forEach(index => { html += measurementRow(index, editing); });
   });
   return html;
