@@ -26,3 +26,7 @@ For a portable copy with data that travels with the folder, use the normal serve
 ## Fonts
 
 The selected display fonts are included locally under `fonts/`, so the interface does not need Google Fonts or an internet connection.
+
+## Procedure privacy
+
+The deployed version contains no built-in experiment procedures. Procedures are stored in the browser and can be moved to another browser through the ZIP backup in Settings.

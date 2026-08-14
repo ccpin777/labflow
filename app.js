@@ -1,5 +1,5 @@
 const INITIAL_LABFLOW_DATA = { experiments: [], blocks: [] };
-const INITIAL_TEMPLATES = {"Fenton":{"name":"Fenton","stages":[{"name":"Dry","duration":24,"location":"Main Lab"},{"name":"Reagent exposure","duration":24,"min":12,"location":"Main Lab"},{"name":"Dry","duration":24,"location":"Main Lab"},{"name":"Measurement","duration":0.3333333333333333,"location":"Main Lab"}]},"Conductivity":{"name":"Conductivity","stages":[{"name":"Acid activation","duration":24,"location":"Main Lab"},{"name":"Measurement","duration":2,"location":"Other Building"}]},"IEC-CEM":{"name":"IEC-CEM","stages":[{"name":"Dry","duration":24,"location":"Main Lab"},{"name":"1N H2SO4 solution","duration":24,"location":"Main Lab","solution":"1N H2SO4"},{"name":"NaNO3 soak","duration":24,"location":"Main Lab"},{"name":"Measurement","duration":0.3333333333333333,"location":"Main Lab"}]},"IEC-AEM":{"name":"IEC-AEM","stages":[{"name":"Dry","duration":24,"location":"Main Lab"},{"name":"NaCl or HCl Soak","duration":24,"location":"Main Lab"},{"name":"NaNO3","duration":24,"location":"Main Lab"},{"name":"Measurement","duration":0.3333333333333333,"location":"Main Lab"}]}};
+const INITIAL_TEMPLATES = {};
 const INITIAL_MEASUREMENTS = { measurements: [], samples: [], cells: [] };
 const BROWSER_STATE_KEY = "labflow-browser-state-v1";
 const BROWSER_TEMPLATES_KEY = "labflow-browser-templates-v1";
