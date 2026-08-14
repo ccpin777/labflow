@@ -709,3 +709,19 @@ button:disabled { cursor: wait; opacity: .72; }
     background: var(--sage);
   }
 }
+
+/* Mobile Safari/WebView sticky fallback: do not transform the sticky cells. */
+@media (max-width: 900px) {
+  .calendar-grid-scroll {
+    isolation: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .calendar-shared-grid .day-head,
+  .calendar-shared-grid .axis-spacer {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    transform: none !important;
+  }
+}
