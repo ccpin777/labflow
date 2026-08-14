@@ -1,4 +1,4 @@
-const APP_VERSION = "Version 3 2026-08-14";
+const APP_VERSION = "Version 4 2026-08-14";
 const INITIAL_LABFLOW_DATA = { experiments: [] };
 const INITIAL_TEMPLATES = {};
 const INITIAL_MEASUREMENTS = { measurements: [], samples: [], cells: [] };

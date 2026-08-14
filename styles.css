@@ -613,6 +613,7 @@ button:disabled { cursor: wait; opacity: .72; }
 .cloud-status[data-tone="saved"] .cloud-light { background: #5c9b68; box-shadow: 0 0 0 3px rgba(92,155,104,.16); }
 .cloud-status[data-tone="error"] .cloud-light { background: #c85b55; box-shadow: 0 0 0 3px rgba(200,91,85,.16); }
 .cloud-status[data-tone="signed-out"] .cloud-light { background: #9aa39d; box-shadow: 0 0 0 3px rgba(154,163,157,.16); }
+.cloud-status[data-tone="connected"] .cloud-light, .cloud-status[data-tone="saved"] .cloud-light { opacity: 0; }
 @keyframes cloud-pulse { 50% { opacity: .45; transform: scale(.82); } }
 
 /* Mobile PWA: keep the weekday/date header visible while scrolling the calendar. */
