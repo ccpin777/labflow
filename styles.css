@@ -474,3 +474,6 @@ body.font-damion h1, body.font-damion .brand { font-family: "Damion", cursive; f
 .auth-card .subtle { margin-bottom: 24px; }
 .auth-actions { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
 .auth-error { color: #a33b32; min-height: 1.4em; margin-top: 12px; }
+
+.settings-divider { height: 1px; background: var(--line); margin: 22px 0 16px; }
+.settings-account { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
