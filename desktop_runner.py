@@ -64,16 +64,22 @@ def main() -> None:
     parser.add_argument("--browser", action="store_true", help="Open LabFlow in the default browser")
     args = parser.parse_args()
     os.chdir(ROOT)
-    port = 8000
-    url = f"http://127.0.0.1:{port}/"
     handler = lambda *args, **kwargs: http.server.SimpleHTTPRequestHandler(*args, directory=str(ROOT), **kwargs)
-    server = LabFlowServer(("127.0.0.1", port), handler)
+    for port in (8000, 8001, 8002):
+        try:
+            server = LabFlowServer(("127.0.0.1", port), handler)
+            break
+        except OSError:
+            continue
+    else:
+        print("Could not find an available local port (tried 8000–8002).", file=sys.stderr)
+        raise SystemExit(1)
+    url = f"http://127.0.0.1:{port}/"
     for name in ("SIGTERM", "SIGINT", "SIGHUP"):
         if hasattr(signal, name):
             signal.signal(getattr(signal, name), stop_app)
     if args.browser:
         print(f"LabFlow browser mode: {url}")
-        threading.Thread(target=server.serve_forever, daemon=True).start()
         webbrowser.open(url)
         try:
             server.serve_forever()
