@@ -193,6 +193,7 @@ body { zoom: 1.1; }
 .calendar-shared-grid .day-timeline { min-height: 918px; }
 .calendar-shared-grid .event-body { display: none; }
 .calendar-shared-grid .calendar-event.occupied .event-body { display: none; }
+.calendar-shared-grid .calendar-event .event-body { display: none !important; }
 .calendar-shared-grid .calendar-event { padding: 5px 6px; font-size: 10px; }
 .calendar-shared-grid .calendar-event strong { font-size: 10px; line-height: 1.2; }
 .calendar-shared-grid .calendar-event.transition, .calendar-shared-grid .calendar-event.projected { left: 4px; right: 4px; padding: 4px 5px; }
