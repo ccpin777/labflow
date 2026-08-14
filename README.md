@@ -4,13 +4,9 @@ The cloud version is designed to run from GitHub Pages or another HTTP/HTTPS hos
 
 ## Start
 
-Double-click:
+For the cloud version, open the GitHub Pages URL. For local testing on macOS, double-click `Run.command`; it starts a local HTTP server at `http://localhost:8000/`. Directly opening `index.html` is only suitable for checking the static layout.
 
-```text
-index.html
-```
-
-LabFlow opens in your default browser. The app includes its fallback/demo data in `app.js`. After that, all experiment, procedure, calendar, and measurement changes are saved in that browser on that Windows computer.
+After signing in, experiments, Procedures, calendar planning, and Sample Measurements are stored in Supabase. If Supabase is unavailable, the app reports the cloud connection problem instead of silently pretending that data was synced.
 
 ## Data behavior
 
@@ -21,7 +17,7 @@ LabFlow opens in your default browser. The app includes its fallback/demo data i
 - Copying the folder later does not copy the browser data.
 - Use the same browser profile for future sessions.
 
-For a portable copy with data that travels with the folder, use the normal server version instead.
+Use Settings → Export for a portable ZIP backup containing schedules, Procedures, and Sample Measurements.
 
 ## Fonts
 

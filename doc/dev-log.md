@@ -91,3 +91,31 @@ The Measurements table is a planning/checklist surface for arbitrary samples and
 - Consider a safer launcher diagnostic that prints the process owning port 8000 before falling back.
 - Add export/import or backup helpers before introducing cloud sync.
 
+
+## 2026-08-14
+
+### Supabase cloud planning
+
+- Connected LabFlow authentication to Supabase Email/Password Auth.
+- Added cloud persistence for schedules, Procedures, and Sample Measurements in `labflow_data`.
+- Added RLS policies so each account can access only its own row.
+- Kept the public anon key in the frontend; no service-role or secret key is used.
+- Added cloud status feedback for loading, saving, saved, and unavailable states.
+- Added protection against carrying one account's local data into another account.
+- Added Forgot password and password recovery screens.
+- Added an empty-Procedure guard before starting a new experiment.
+
+### Security and reliability
+
+- Escaped user-provided names, locations, notes, and calendar detail output.
+- Pinned the Supabase browser SDK version.
+- Disabled the old cache-first Service Worker to prevent stale deployments.
+- Added `Run.command` for local HTTP testing; direct `index.html` opening is now only for static layout checks.
+- Added a visible LabFlow favicon and matching PWA icon.
+- Added ZIP backup support for schedules, Procedures, and Sample Measurements.
+
+### Product direction
+
+- Flexible work is now added with `+ Lab block` beside `+ New experiment`.
+- Started considering Sample Measurement Groups for growing sample lists.
+- Stock Solution Calculation remains a separate offline-capable tool and may later be linked from the public login screen.
