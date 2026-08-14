@@ -35,3 +35,9 @@ The deployed version contains no built-in experiment procedures. Procedures are 
 - In Supabase Auth, keep email confirmation enabled and set a strong password policy.
 - Consider enabling leaked-password protection and MFA for a production deployment.
 - The public `anon`/publishable key is expected in the browser; RLS is what protects the data.
+
+## Assets
+
+- Web-facing generated images live under `assets/branding/`.
+- PWA icons live under `assets/icons/` for the web app.
+- Desktop/source copies of the images and icons live directly under `resources/`.

@@ -130,3 +130,27 @@ The Measurements table is a planning/checklist surface for arbitrary samples and
 - Fixed Modal dismissal during text selection, copy, and cut actions.
 - Added `+ Lab block` beside `+ New experiment`; removed the Today-page Quick add block.
 - Confirmed that Sample Measurements Groups and the offline Stock Solution calculator remain future design work.
+
+## 2026-08-14 (continued)
+
+### Assets and PWA
+
+- Reorganized generated artwork into `assets/branding/` for the web app and mirrored desktop/source copies directly under `resources/`.
+- Moved the 192×192 and 512×512 PNG PWA icons into `assets/icons/`, with matching copies in `resources/`.
+- Updated the manifest, Apple touch icon, Service Worker asset list, and README paths.
+- Added Today artwork selection in Settings: Artwork 1, Artwork 2, or None.
+- Today displays one selected artwork without a border or shadow; desktop size is 120×120px and mobile layout remains responsive.
+
+### Authentication and interface
+
+- Added an initial LabFlow loading screen and button-level loading states for sign-in, account creation, and password reset.
+- Added a configurable default lab location in Settings; an unset location remains blank and old `Main Lab` defaults are normalized away.
+- Removed the unused Lab block feature and its calendar data flow.
+- Changed the New Experiment action to an icon-only conical flask button with an accessible label and tooltip.
+
+### Desktop launcher
+
+- Added a PyWebView desktop runner with a blank native title, persistent local storage, coordinated window/terminal shutdown, and macOS light Aqua title-bar appearance.
+- Updated `Run.command` to choose Browser or App directly in the existing Terminal; Browser mode no longer requires PyWebView.
+
+Validation: JavaScript syntax, Python compilation, shell syntax, and diff whitespace checks pass.
