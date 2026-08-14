@@ -783,3 +783,6 @@ body.text-xlarge h2 { font-size: 34px; }
 }
 
 .auth-artwork { display: block; width: 120px; height: 120px; object-fit: cover; margin: 0 auto 20px; border-radius: 22px; }
+
+/* Overlapping calendar events share equal lane widths, including ready markers. */
+.calendar-shared-grid .day-timeline .calendar-event[style*="--event-lane"] { width: calc((100% - 8px) / var(--event-lanes) - 4px) !important; min-width: 0 !important; }
