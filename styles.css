@@ -486,3 +486,39 @@ body.font-damion h1, body.font-damion .brand { font-family: "Damion", cursive; f
 .cloud-status[data-tone="saving"] { color: var(--amber-dark); }
 .cloud-status[data-tone="saved"] { color: var(--sage-dark); }
 .cloud-status[data-tone="error"] { color: #a33b32; }
+
+@media (max-width: 760px) {
+  .topbar {
+    height: auto;
+    min-height: 70px;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    padding: 12px 0 0;
+  }
+  .topbar-actions {
+    margin-left: auto;
+  }
+  .topbar-actions .icon-button {
+    margin-left: 0;
+  }
+  .cloud-status {
+    display: none;
+  }
+  .main-nav {
+    order: 3;
+    flex: 0 0 100%;
+    width: 100%;
+    height: 38px;
+    gap: 20px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+  .main-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .main-nav a {
+    flex: 0 0 auto;
+  }
+}
