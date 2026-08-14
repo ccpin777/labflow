@@ -604,3 +604,70 @@ button:disabled { cursor: wait; opacity: .72; }
 
 .flask-action { width: auto; min-width: 74px; height: 42px; padding: 0 12px; justify-content: center; }
 @media (max-width: 760px) { .today-heading .heading-actions { justify-content: flex-end; } }
+
+
+.cloud-status { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 22px; color: var(--muted); }
+.cloud-status-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.cloud-light { display: block; width: 10px; height: 10px; border-radius: 50%; background: #6c91c8; box-shadow: 0 0 0 3px rgba(108,145,200,.14); }
+.cloud-status[data-tone="saving"] .cloud-light { background: #d7a43b; box-shadow: 0 0 0 3px rgba(215,164,59,.16); animation: cloud-pulse 1.2s ease-in-out infinite; }
+.cloud-status[data-tone="saved"] .cloud-light { background: #5c9b68; box-shadow: 0 0 0 3px rgba(92,155,104,.16); }
+.cloud-status[data-tone="error"] .cloud-light { background: #c85b55; box-shadow: 0 0 0 3px rgba(200,91,85,.16); }
+.cloud-status[data-tone="signed-out"] .cloud-light { background: #9aa39d; box-shadow: 0 0 0 3px rgba(154,163,157,.16); }
+@keyframes cloud-pulse { 50% { opacity: .45; transform: scale(.82); } }
+
+/* Mobile PWA: keep the weekday/date header visible while scrolling the calendar. */
+@media (max-width: 900px) {
+  .calendar-grid-scroll {
+    position: relative;
+    overflow: auto;
+  }
+
+  .calendar-shared-grid .day,
+  .calendar-shared-grid .day-head,
+  .calendar-shared-grid .axis-spacer {
+    overflow: visible;
+  }
+
+  .calendar-shared-grid .day-head,
+  .calendar-shared-grid .axis-spacer {
+    position: sticky;
+    top: 0;
+  }
+
+  .calendar-shared-grid .day-head {
+    z-index: 30;
+    background: var(--paper);
+  }
+
+  .calendar-shared-grid .axis-spacer {
+    z-index: 31;
+    background: var(--paper);
+  }
+
+  .calendar-shared-grid .day.today .day-head {
+    background: var(--sage);
+  }
+}
+
+/* Mobile Today: keep the action on the left and give the artwork more room. */
+@media (max-width: 760px) {
+  .today-heading {
+    grid-template-columns: minmax(0, 1fr) 124px;
+    column-gap: 8px;
+  }
+
+  .today-heading .heading-visual {
+    width: 124px;
+    height: 120px;
+  }
+
+  .today-heading .heading-visual img {
+    width: 120px;
+    height: 120px;
+    border-radius: 22px;
+  }
+
+  .today-heading .heading-actions {
+    justify-content: flex-start;
+  }
+}
