@@ -403,7 +403,7 @@ html, body { overflow-x: hidden; }
 .measurement-check.status-not-required { border-color:#9aa39d; color:#707a73; background:transparent; }
 .measurement-group-row th { padding:10px 9px 6px; text-align:left; color:var(--ink); background:#f3f6f0; font-size:12px; }
 .measurement-group-row button { margin-left:8px; border:0; background:transparent; color:var(--muted); cursor:pointer; font-size:12px; }
-.measurement-select { width:16px; height:16px; margin-right:7px; vertical-align:middle; accent-color:var(--sage-dark); }
+.sample-edit-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:22px;margin-bottom:2px}.measurement-board-table th:first-child{min-width:190px}.measurement-board-table.is-editing .measurement-select{margin:0}.measurement-board-table.is-editing .drag-handle{margin:0 auto 0 2px}.measurement-board-table.is-editing .remove-sample-button{margin:0 0 0 auto}.measurement-select { width:16px; height:16px; margin-right:7px; vertical-align:middle; accent-color:var(--sage-dark); }
 
 .measurement-panel-head > div { display:grid; gap:3px; }
 .add-measurement-button { min-height:32px; padding:6px 10px; font-size:12px; white-space:nowrap; }
@@ -791,3 +791,95 @@ body.text-xlarge h2 { font-size: 34px; }
 
 /* Overlapping calendar events share equal lane widths, including ready markers. */
 .calendar-shared-grid .day-timeline .calendar-event[style*="--event-lane"] { width: calc((100% - 8px) / var(--event-lanes) - 4px) !important; min-width: 0 !important; }
+
+.measurement-group-filter {
+  min-height: 34px;
+  min-width: 142px;
+  padding: 7px 30px 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--paper);
+  background-image: linear-gradient(45deg, transparent 50%, var(--sage-dark) 50%), linear-gradient(135deg, var(--sage-dark) 50%, transparent 50%);
+  background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%;
+  background-repeat: no-repeat;
+  background-size: 5px 5px, 5px 5px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+}
+.measurement-group-filter:hover { border-color: var(--sage-dark); background-color: var(--sage); }
+.measurement-group-filter:focus-visible { border-color: var(--sage-dark); box-shadow: 0 0 0 3px rgba(86,113,95,.16); }
+
+/* Keep the measurement toolbar stable while Edit changes its contents. */
+.measurement-board-tools { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:16px; }
+.measurement-board-leading { display:flex; align-items:center; gap:14px; min-width:0; }
+.measurement-board-actions { display:flex; align-items:center; justify-content:flex-end; gap:10px; flex-wrap:nowrap; white-space:nowrap; }
+.measurement-group-picker { position:relative; min-width:142px; }
+.measurement-group-picker summary { display:flex; align-items:center; justify-content:space-between; gap:14px; min-height:34px; box-sizing:border-box; padding:7px 10px 7px 11px; border:1px solid var(--line); border-radius:10px; background:var(--paper); color:var(--ink); font-size:12px; font-weight:600; cursor:pointer; list-style:none; }
+.measurement-group-picker summary::-webkit-details-marker { display:none; }
+.measurement-group-picker summary:hover, .measurement-group-picker[open] summary { border-color:var(--sage-dark); background:var(--sage); }
+.measurement-group-chevron { color:var(--sage-dark); font-size:16px; line-height:10px; }
+.measurement-group-menu { position:absolute; z-index:20; top:calc(100% + 5px); left:0; min-width:100%; box-sizing:border-box; padding:5px; border:1px solid var(--line); border-radius:10px; background:var(--paper); box-shadow:0 8px 22px rgba(54,62,52,.14); }
+.measurement-group-menu button { display:block; width:100%; padding:8px 9px; border:0; border-radius:7px; background:transparent; color:var(--ink); font:inherit; font-size:12px; text-align:left; cursor:pointer; white-space:nowrap; }
+.measurement-group-menu button:hover, .measurement-group-menu button.is-selected { background:var(--sage); color:var(--ink); }
+@media (max-width:560px) { .measurement-board-tools { align-items:stretch; grid-template-columns:1fr; gap:12px; } .measurement-board-leading { align-items:flex-start; flex-wrap:wrap; } .measurement-board-actions { justify-content:flex-start; flex-wrap:wrap; white-space:normal; } }
+
+/* Give the Settings fields a calmer vertical rhythm. */
+.modal:has(.settings-backup) > .field { margin-bottom: 18px; }
+.modal:has(.settings-backup) .settings-backup { margin-top: 24px; }
+.modal:has(.settings-backup) .settings-divider { margin-top: 26px; }
+.group-selected-placeholder { visibility:hidden; pointer-events:none; }
+
+/* Reserve fixed slots so Edit/Done never moves the neighboring actions. */
+.measurement-board-actions { display:grid; grid-template-columns:132px 94px 124px 76px; align-items:center; justify-content:end; gap:10px; }
+.measurement-board-actions > button { width:100%; box-sizing:border-box; white-space:nowrap; }
+.measurement-group-chevron { position:relative; top:-2px; }
+.modal:has(.settings-backup) .settings-account label { font-weight:700; }
+@media (max-width:560px) { .measurement-board-actions { display:flex; justify-content:flex-start; } .measurement-board-actions > button { width:auto; } }
+
+.measurement-board-table .sample-edit-controls.is-placeholder,
+.measurement-board-table .drag-handle.is-placeholder { visibility:hidden; pointer-events:none; }
+.measurement-board-actions { grid-template-columns:132px 94px 140px 78px; }
+
+/* Keep row actions anchored instead of letting the delete mark resize the table. */
+.measurement-board-table { table-layout:fixed; }
+.measurement-board-table th:first-child { position:relative; width:190px; }
+.measurement-board-table .sample-edit-controls { position:relative; padding-right:2px; }
+.measurement-board-table .sample-edit-controls .remove-sample-button { position:absolute; right:0; top:50%; transform:translateY(-50%); margin:0; }
+
+/* Keep select, reorder, and delete as one compact control cluster. */
+.measurement-board-table .sample-edit-controls { justify-content:flex-start; gap:8px; }
+.measurement-board-table .sample-edit-controls .drag-handle { margin:0; }
+.measurement-board-table .sample-edit-controls .remove-sample-button { position:static; transform:none; margin:0; }
+
+.measurement-board-actions { grid-template-columns:132px 38px 94px 140px 78px; }
+.danger-icon-button { width:38px; height:38px; padding:0; border:1px solid #c77b70; border-radius:10px; background:transparent; color:#a64f45; font-size:20px; line-height:1; cursor:pointer; }
+.danger-icon-button:hover { background:#f8e7e3; border-color:#a64f45; }
+.measurement-board-actions .group-selected-placeholder { visibility:hidden; pointer-events:none; }
+.measurement-board-table .sample-edit-controls .sample-label { flex:1; min-width:0; }
+
+/* Keep the sample label visible while reserving only the edit controls. */
+.measurement-board-table th:first-child { position:sticky; left:0; z-index:3; background:var(--paper); }
+.measurement-board-table .sample-row-content { display:flex; align-items:center; gap:8px; min-height:38px; }
+.measurement-board-table .sample-edit-controls { flex:0 0 40px; padding:0; }
+.measurement-board-table .sample-edit-controls.is-placeholder { visibility:hidden; pointer-events:none; }
+.measurement-board-table .sample-row-content .sample-label { flex:1; min-width:0; width:auto; }
+.measurement-board-table .measurement-group-row th { position:static; }
+.measurement-legend b, .measurement-check { font-family:inherit; }
+body.font-gochi .measurement-legend b, body.font-gochi .measurement-check { font-family:"Gochi Hand", cursive; }
+body.font-marker .measurement-legend b, body.font-marker .measurement-check { font-family:"Permanent Marker", cursive; }
+body.font-damion .measurement-legend b, body.font-damion .measurement-check { font-family:"Damion", cursive; }
+
+/* Keep the Sample row identical before and during Edit. */
+.measurement-board-table th:first-child { width:240px; min-width:240px; }
+.measurement-board-table .sample-row-content { height:38px; min-height:38px; }
+.measurement-board-table .sample-row-content .sample-label { box-sizing:border-box; height:34px; margin:0; }
+.measurement-board-table tbody tr:not(.measurement-group-row) { height:48px; }
+.measurement-legend b { font-family:inherit !important; }
+.trash-icon { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; vertical-align:middle; }
+.trash-icon { width:20px; height:20px; stroke-width:2.1; }
