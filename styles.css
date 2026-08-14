@@ -400,6 +400,10 @@ html, body { overflow-x: hidden; }
 .measurement-check.status-planned { border-color:#c5a86c; color:#927436; background:transparent; }
 .measurement-check.status-delegated { border-color:#8b76a8; color:#70558e; background:transparent; }
 .measurement-check.status-completed { border-color:var(--sage-dark); color:var(--sage-dark); background:transparent; }
+.measurement-check.status-not-required { border-color:#9aa39d; color:#707a73; background:transparent; }
+.measurement-group-row th { padding:10px 9px 6px; text-align:left; color:var(--ink); background:#f3f6f0; font-size:12px; }
+.measurement-group-row button { margin-left:8px; border:0; background:transparent; color:var(--muted); cursor:pointer; font-size:12px; }
+.measurement-select { width:16px; height:16px; margin-right:7px; vertical-align:middle; accent-color:var(--sage-dark); }
 
 .measurement-panel-head > div { display:grid; gap:3px; }
 .add-measurement-button { min-height:32px; padding:6px 10px; font-size:12px; white-space:nowrap; }
