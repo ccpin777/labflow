@@ -478,5 +478,6 @@ body.font-damion h1, body.font-damion .brand { font-family: "Damion", cursive; f
 .settings-divider { height: 1px; background: var(--line); margin: 22px 0 16px; }
 .settings-account { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 
-.main-nav .nav-action { position: relative; display: flex; align-items: center; border: 0; padding: 0; background: transparent; color: var(--muted); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
-.main-nav .nav-action:hover, .main-nav .nav-action:focus-visible { color: var(--ink); }
+
+.heading-actions { display: flex; align-items: center; gap: 10px; }
+@media (max-width: 760px) { .heading-actions { width: 100%; flex-wrap: wrap; } }
