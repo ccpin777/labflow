@@ -481,3 +481,8 @@ body.font-damion h1, body.font-damion .brand { font-family: "Damion", cursive; f
 
 .heading-actions { display: flex; align-items: center; gap: 10px; }
 @media (max-width: 760px) { .heading-actions { width: 100%; flex-wrap: wrap; } }
+
+.cloud-status { color: var(--muted); font-size: 11px; white-space: nowrap; }
+.cloud-status[data-tone="saving"] { color: var(--amber-dark); }
+.cloud-status[data-tone="saved"] { color: var(--sage-dark); }
+.cloud-status[data-tone="error"] { color: #a33b32; }
