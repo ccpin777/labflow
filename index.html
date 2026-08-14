@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f8f4" />
+    <title>LabFlow — your lab, in flow</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="manifest" href="manifest.webmanifest" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#today" aria-label="LabFlow home"><span class="brand-mark">⌁</span><span>LabFlow</span></a>
+        <nav class="main-nav" aria-label="Main navigation">
+          <a href="#today" data-view="today" class="active">Today</a>
+          <a href="#experiments" data-view="experiments">Experiments</a>
+          <a href="#calendar" data-view="calendar">Calendar</a>
+          <a href="#measurements" data-view="measurements">Sample Measurements</a>
+          <a href="#procedures" data-view="procedures">Experimental Procedure</a>
+        </nav>
+        <div class="topbar-actions"><button class="icon-button" id="quickExportButton" aria-label="Export" title="Export"><svg class="export-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16" /></svg></button><button class="icon-button settings-button" id="settingsButton" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0L6.2 6.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></div>
+      </header>
+
+      <main id="app"></main>
+    </div>
+
+    <div class="modal-backdrop" id="modalBackdrop" hidden>
+      <section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"></section>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+    <script src="app.js"></script>
+    <script>if ("serviceWorker" in navigator && (location.protocol === "http:" || location.protocol === "https:")) navigator.serviceWorker.register("sw.js").catch(() => {});</script>
+  </body>
+</html>
