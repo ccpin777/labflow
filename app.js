@@ -281,7 +281,7 @@ function measurementGroupFilterMarkup() {
   const label = selected ? selected.name : "All groups";
   return '<details class="measurement-group-picker" id="measurement-group-picker"><summary><span>' + escapeHtml(label) + '</span><span class="measurement-group-chevron" aria-hidden="true">⌄</span></summary><div class="measurement-group-menu" role="menu">' +
     '<button type="button" data-measurement-group-option="all"' + (measurementBoardGroupFilter === "all" ? ' class="is-selected"' : '') + '>All groups</button>' +
-    measurementBoard.groups.map(group => '<button type="button" data-measurement-group-option="' + escapeHtml(group.id) + '"' + (measurementBoardGroupFilter === group.id ? ' class="is-selected"' : '') + '>' + escapeHtml(group.name) + '</button>').join("") +
+    measurementBoard.groups.filter(group => measurementBoard.sampleGroups.includes(group.id)).map(group => '<button type="button" data-measurement-group-option="' + escapeHtml(group.id) + '"' + (measurementBoardGroupFilter === group.id ? ' class="is-selected"' : '') + '>' + escapeHtml(group.name) + '</button>').join("") +
     '</div></details>';
 }
 function measurementRow(r, editing) {

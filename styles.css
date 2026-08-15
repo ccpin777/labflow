@@ -964,3 +964,14 @@ html { scrollbar-gutter: stable; }
 .measurement-board-actions > button.group-selected-placeholder { transition: none !important; animation: none !important; }
 .measurement-board-actions > button.group-selected-placeholder { opacity: 0 !important; visibility: hidden !important; }
 .measurement-board-actions > button:not(.group-selected-placeholder) { opacity: 1 !important; visibility: visible !important; }
+
+@media (max-width:560px) {
+  /* Mobile toolbar: legend stays separate; progress and + Sample share one row. */
+  .measurement-board-tools { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px 12px; }
+  .measurement-board-leading { display: contents; }
+  .measurement-group-picker { grid-column: 1 / -1; grid-row: 1; width: 100%; }
+  .measurement-legend { grid-column: 1 / -1; grid-row: 2; width: 100%; }
+  .measurement-progress { grid-column: 1; grid-row: 3; align-self: center; }
+  .measurement-board-actions { display: contents; }
+  .measurement-board-actions > button:nth-child(3) { grid-column: 2; grid-row: 3; justify-self: end; width: auto; }
+}
