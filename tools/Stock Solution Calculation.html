@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>wt% Solution Calculator</title>
+  <title>Chemistry Calculator</title>
   <style>
     @font-face { font-family: "Gochi Hand"; src: url("../fonts/GochiHand-Regular.ttf") format("truetype"); font-display: swap; }
     :root {
@@ -32,7 +32,20 @@
     }
     .container { width: min(760px, 100%); margin: 0 auto; }
     .calculator-header { margin-bottom: 20px; }
-    .back-link { color: var(--sage-dark); text-decoration: none; font-size: 13px; font-weight: 700; }
+    .tabs { display: flex; gap: 8px; margin: 24px 0 14px; border-bottom: 1px solid var(--line); }
+    .tab { padding: 10px 14px; color: var(--muted); background: transparent; border: 0; border-bottom: 2px solid transparent; border-radius: 0; }
+    .tab.active { color: var(--sage-dark); border-bottom-color: var(--sage-dark); }
+    .tab-panel[hidden] { display: none; }
+    .measurement-group-picker { position: relative; min-width: 142px; }
+    .measurement-group-picker summary { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 34px; box-sizing: border-box; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); font: inherit; cursor: pointer; list-style: none; }
+    .measurement-group-picker summary::-webkit-details-marker { display: none; }
+    .measurement-group-picker summary:hover, .measurement-group-picker[open] summary { border-color: var(--sage-dark); background: var(--sage); }
+    .measurement-group-chevron { width: 8px; height: 8px; flex: 0 0 auto; margin: -4px 2px 0 0; border-right: 1.5px solid var(--sage-dark); border-bottom: 1.5px solid var(--sage-dark); transform: rotate(45deg); }
+    .measurement-group-menu { position: absolute; z-index: 20; top: calc(100% + 5px); left: 0; min-width: 100%; box-sizing: border-box; padding: 5px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); box-shadow: 0 8px 22px rgba(54,62,52,.14); }
+    .measurement-group-menu button { display: block; width: 100%; padding: 8px 9px; border: 0; border-radius: 7px; background: transparent; color: var(--ink); font: inherit; font-size: 12px; text-align: left; cursor: pointer; white-space: nowrap; }
+    .measurement-group-menu button:hover { background: var(--sage); color: var(--ink); }
+    .coming-soon { padding: 24px; border: 1px dashed var(--line); border-radius: 13px; color: var(--muted); background: #f7faf6; }
+    .back-link { display: inline-block; margin-bottom: 18px; color: var(--sage-dark); text-decoration: none; font-size: 13px; font-weight: 700; }
     .back-link:hover { text-decoration: underline; }
     .eyebrow { margin: 18px 0 4px; color: var(--sage-dark); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
     h1 { display: flex; align-items: center; gap: 11px; margin: 0; font: 400 34px/1.15 "Gochi Hand", cursive; letter-spacing: .01em; }
@@ -42,8 +55,8 @@
     .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .field { margin-top: 17px; }
     .field.full { grid-column: 1 / -1; }
-    input { width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px; outline: none; background: #fff; color: var(--ink); font: inherit; }
-    input:focus { border-color: var(--sage-dark); box-shadow: 0 0 0 3px rgba(86,113,95,.12); }
+    input, select { width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px; outline: none; background: #fff; color: var(--ink); font: inherit; }
+    input:focus, select:focus { border-color: var(--sage-dark); box-shadow: 0 0 0 3px rgba(86,113,95,.12); }
     .calculator-card { padding: 25px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); box-shadow: var(--shadow); }
     button { border: 1px solid transparent; border-radius: 10px; cursor: pointer; font: inherit; font-weight: 700; transition: .18s ease; }
     button:hover { transform: translateY(-1px); }
@@ -94,12 +107,16 @@
   <div class="container">
     <header class="calculator-header">
       <a class="back-link" href="../index.html">← Back to LabFlow</a>
-      <div class="eyebrow">Local tool · No login · Works offline</div>
-      <h1><span class="brand-mark" aria-hidden="true">⌁</span>wt% Solution Calculator</h1>
-      <p class="desc">Calculate the final total mass and solvent to add from a solute mass and target wt%.</p>
+      <h1><span class="brand-mark" aria-hidden="true">⌁</span>Chemistry Calculator</h1>
     </header>
 
+    <div class="tabs" role="tablist" aria-label="Calculator type">
+      <button class="tab active" id="wtTab" type="button" role="tab" aria-selected="true" aria-controls="wtPanel">wt% solution</button>
+      <button class="tab" id="commonTab" type="button" role="tab" aria-selected="false" aria-controls="commonPanel">Common solution</button>
+    </div>
+
     <main class="calculator-card">
+      <section class="tab-panel" id="wtPanel" role="tabpanel" aria-labelledby="wtTab">
       <div class="field-grid">
         <div class="field full"><label for="sampleName">Sample name</label><input type="text" id="sampleName" /></div>
         <div class="field"><label for="solute">Solute mass x (g)</label><input type="text" id="solute" inputmode="decimal" autocomplete="off" /></div>
@@ -127,6 +144,19 @@
       <div id="historyList"></div>
       <button class="secondary-btn" onclick="clearAllRecords()">Clear All Records</button>
     </div>
+      </section>
+
+      <section class="tab-panel" id="commonPanel" role="tabpanel" aria-labelledby="commonTab" hidden>
+        <div class="field-grid">
+          <div class="field full"><label for="commonChemicalPicker">Chemical</label><details class="measurement-group-picker" id="commonChemicalPicker"><summary><span id="commonChemicalLabel">Sodium chloride (NaCl)</span><span class="measurement-group-chevron" aria-hidden="true"></span></summary><div class="measurement-group-menu" role="menu"><button type="button" data-common-chemical-option="NaCl">Sodium chloride (NaCl)</button><button type="button" data-common-chemical-option="NaOH">Sodium hydroxide (NaOH)</button><button type="button" data-common-chemical-option="NaNO3">Sodium nitrate (NaNO<sub>3</sub>)</button><button type="button" data-common-chemical-option="Na2CO3">Sodium carbonate (Na<sub>2</sub>CO<sub>3</sub>)</button><button type="button" data-common-chemical-option="HCl">Hydrochloric acid (HCl)</button><button type="button" data-common-chemical-option="H2SO4">Sulfuric acid (H<sub>2</sub>SO<sub>4</sub>)</button></div><input type="hidden" id="commonChemical" value="NaCl"></details></div>
+          <div class="field"><label for="commonMolarity">Target concentration (M)</label><input type="text" id="commonMolarity" inputmode="decimal" autocomplete="off"></div>
+          <div class="field"><label for="commonVolume">Final volume (mL)</label><input type="text" id="commonVolume" inputmode="decimal" autocomplete="off"></div>
+        </div>
+        <div class="action-row">
+          <button class="calculate-btn" type="button" onclick="calculateCommonSolution()">Calculate</button>
+        </div>
+        <div id="commonOutput"></div>
+      </section>
     </main>
   </div>
 
@@ -259,6 +289,36 @@
       renderRecords();
     }
 
+    function calculateCommonSolution() {
+      const data = {
+        NaCl: { type: "solid", molarMass: 58.44, display: "Sodium chloride (NaCl)" },
+        NaOH: { type: "solid", molarMass: 40.00, display: "Sodium hydroxide (NaOH)" },
+        NaNO3: { type: "solid", molarMass: 85.00, display: "Sodium nitrate (NaNO3)" },
+        Na2CO3: { type: "solid", molarMass: 105.99, display: "Sodium carbonate (Na2CO3)" },
+        HCl: { type: "liquid", molarMass: 36.46, wtFraction: 0.37, density: 1.19, display: "Hydrochloric acid (HCl)" },
+        H2SO4: { type: "liquid", molarMass: 98.08, wtFraction: 0.98, density: 1.84, display: "Sulfuric acid (H2SO4)" },
+      };
+      const chemical = document.getElementById("commonChemical").value;
+      const molarity = parseFloat(document.getElementById("commonMolarity").value);
+      const volumeMl = parseFloat(document.getElementById("commonVolume").value);
+      const output = document.getElementById("commonOutput");
+      const reagent = data[chemical];
+      output.innerHTML = "";
+      if (!Number.isFinite(molarity) || !Number.isFinite(volumeMl) || molarity <= 0 || volumeMl <= 0) {
+        output.innerHTML = "<div class=\"error\">Please enter positive numeric values for concentration and volume.</div>";
+        return;
+      }
+      const volumeL = volumeMl / 1000;
+      if (reagent.type === "solid") {
+        const mass = molarity * volumeL * reagent.molarMass;
+        output.innerHTML = "<div class=\"result\"><div><strong>" + reagent.display + "</strong></div><div>Weigh: <strong>" + mass.toFixed(4) + " g</strong></div><div>Add solvent to a final volume of <strong>" + volumeMl.toFixed(2) + " mL</strong>.</div></div>";
+        return;
+      }
+      const stockMolarity = reagent.density * 1000 * reagent.wtFraction / reagent.molarMass;
+      const stockVolumeMl = molarity * volumeL / stockMolarity * 1000;
+      output.innerHTML = "<div class=\"result\"><div><strong>" + reagent.display + "</strong> stock assumption: " + (reagent.wtFraction * 100) + "% · " + reagent.density.toFixed(2) + " g/mL</div><div>Measure: <strong>" + stockVolumeMl.toFixed(4) + " mL</strong> stock solution</div><div><strong>Preparation</strong></div><div>1. Add water to a suitable vessel first.</div><div>2. Slowly add the acid stock while mixing.</div><div>3. Allow the solution to cool to room temperature.</div><div>4. Add water to a final volume of <strong>" + volumeMl.toFixed(2) + " mL</strong>.</div><div class=\"small\">Always add acid to water, never water to acid.</div></div>";
+    }
+
     function deleteRecord(index) {
       const records = getRecords();
       records.splice(index, 1);
@@ -348,6 +408,26 @@
         document.getElementById("output").innerHTML = "";
       }
     }
+
+    document.querySelectorAll("[data-common-chemical-option]").forEach(option => option.addEventListener("click", () => {
+      document.getElementById("commonChemical").value = option.dataset.commonChemicalOption;
+      document.getElementById("commonChemicalLabel").innerHTML = option.innerHTML;
+      document.getElementById("commonChemicalPicker").open = false;
+    }));
+
+    document.querySelectorAll(".tab").forEach(tab => tab.addEventListener("click", () => {
+      const isWt = tab.id === "wtTab";
+      document.querySelectorAll(".tab").forEach(item => { item.classList.toggle("active", item === tab); item.setAttribute("aria-selected", item === tab ? "true" : "false"); });
+      document.getElementById("wtPanel").hidden = !isWt;
+      document.getElementById("commonPanel").hidden = isWt;
+    }));
+
+    document.querySelectorAll("#wtPanel input, #commonPanel input").forEach(field => field.addEventListener("keydown", event => {
+      if (event.key !== "Enter") return;
+      event.preventDefault();
+      if (field.closest("#commonPanel")) calculateCommonSolution();
+      else calculate();
+    }));
 
     updateBackupStatus(localStorage.getItem(LAST_BACKUP_KEY));
     renderRecords();
