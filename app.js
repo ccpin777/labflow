@@ -146,7 +146,7 @@ function normalizeMeasurementBoard() {
 }
 normalizeMeasurementBoard();
 let state = { experiments: [] };
-function isMeasurementStage(stage) { const name = String(stage?.name || "").trim().toLowerCase(); return ["measurement", "measurements", "measurment", "measurments", "conductivity"].includes(name) || name.includes("conductivity") || name.includes("measurement"); }
+function isMeasurementStage(stage) { const name = String(stage?.name || "").trim().toLowerCase(); return ["measurement", "measurements", "measurment", "measurments"].includes(name) || name.includes("measurement"); }
 function isTimedStage(stage) { return Number(stage.duration) > 0 && !isMeasurementStage(stage); }
 const DEFAULT_TRANSITION_HOURS = 1;
 function sampleCount(exp) { return Array.isArray(exp.samples) && exp.samples.length ? exp.samples.length : 1; }

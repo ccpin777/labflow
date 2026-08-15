@@ -358,6 +358,7 @@ html, body { overflow-x: hidden; }
 /* Stronger collision treatment: compact markers, spacious occupied blocks. */
 .calendar-shared-grid .calendar-event.transition,
 .calendar-shared-grid .calendar-event.projected:not(.occupied) { min-height: 22px; height: 22px !important; padding: 3px 5px; line-height: 1.15; overflow: hidden; }
+.calendar-shared-grid .calendar-event.projected:not(.occupied) { background: transparent; border: 0; border-left: 2px dashed var(--experiment-line, #a0bba1); border-radius: 0; color: var(--experiment-text, var(--sage-dark)); }
 .calendar-shared-grid .calendar-event.transition strong,
 .calendar-shared-grid .calendar-event.projected:not(.occupied) strong { font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; }
 .calendar-shared-grid .calendar-event.transition .event-body,
