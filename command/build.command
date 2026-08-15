@@ -43,6 +43,9 @@ find "$APP_PATH" -name .DS_Store -delete
 rm -rf "$APP_FOLDER"
 if command -v codesign >/dev/null 2>&1; then codesign --force --deep --sign - "$APP_PATH"; fi
 
+# Keep the final app and reusable BuildVenv, but remove successful-build intermediates.
+rm -rf "$BUILD_DIR"
+
 echo
 printf "Built: %s\n" "$APP_PATH"
 printf "Icon: %s\n" "$ICON_ICNS"
