@@ -282,7 +282,7 @@ function advance(id, when) { const e = state.experiments.find(x => x.id === id),
 function measurementGroupFilterMarkup() {
   const selected = measurementBoard.groups.find(group => group.id === measurementBoardGroupFilter);
   const label = selected ? selected.name : "All groups";
-  return '<details class="measurement-group-picker" id="measurement-group-picker"><summary><span>' + escapeHtml(label) + '</span><span class="measurement-group-chevron" aria-hidden="true">⌄</span></summary><div class="measurement-group-menu" role="menu">' +
+  return '<details class="measurement-group-picker" id="measurement-group-picker"><summary><span>' + escapeHtml(label) + '</span><span class="measurement-group-chevron" aria-hidden="true"></span></summary><div class="measurement-group-menu" role="menu">' +
     '<button type="button" data-measurement-group-option="all"' + (measurementBoardGroupFilter === "all" ? ' class="is-selected"' : '') + '>All groups</button>' +
     measurementBoard.groups.filter(group => measurementBoard.sampleGroups.includes(group.id)).map(group => '<button type="button" data-measurement-group-option="' + escapeHtml(group.id) + '"' + (measurementBoardGroupFilter === group.id ? ' class="is-selected"' : '') + '>' + escapeHtml(group.name) + '</button>').join("") +
     '</div></details>';
@@ -306,7 +306,7 @@ function renderMeasurementRows(editing) {
   measurementBoard.groups.forEach(group => {
     const indices = measurementBoard.samples.map((_, index) => index).filter(index => measurementBoard.sampleGroups[index] === group.id).filter(index => measurementBoardGroupFilter === "all" || measurementBoardGroupFilter === group.id);
     if (!indices.length) return;
-    html += '<tr class="measurement-group-row"><th>' + escapeHtml(group.name) + ' <span class="count">(' + indices.length + ' samples)</span></th><td colspan="' + measurementBoard.measurements.length + '"></td></tr>';
+    html += '<tr class="measurement-group-row"><th><span class="measurement-group-name">' + escapeHtml(group.name) + '</span> <span class="measurement-group-count">(' + indices.length + ' samples)</span></th><td colspan="' + measurementBoard.measurements.length + '"></td></tr>';
     indices.forEach(index => { html += measurementRow(index, editing); });
   });
   return html;
