@@ -885,16 +885,28 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
 .trash-icon { width:20px; height:20px; stroke-width:2.1; }
 
 
-/* Keep group labels in the frozen Sample column while measurement cells scroll. */
-.measurement-board-table { width: max-content; min-width: 100%; }
+
+@media (max-width:560px) {
+  .measurement-board-card { min-width: 0; }
+  .measurement-board-leading,
+  .measurement-legend { min-width: 0; width: 100%; }
+  .measurement-legend { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px 12px; }
+  .measurement-legend span { min-width: 0; white-space: nowrap; }
+  .measurement-board-actions { display: flex; width: auto; justify-content: flex-start; }
+  .measurement-board-actions > button:nth-child(1),
+  .measurement-board-actions > button:nth-child(2),
+  .measurement-board-actions > button:nth-child(4),
+  .measurement-board-actions > button:nth-child(5) { display: none; }
+  .measurement-board-actions > button:nth-child(3) { display: block; width: auto; }
+  .measurement-board-table .sample-edit-controls { display: none; }
+}
+
+/* Restore readable measurement columns without the experimental stretched layout. */
+.measurement-board-table { width: max-content; min-width: 100%; table-layout: fixed; }
 .measurement-board-table th:first-child,
-.measurement-board-table td:first-child { width: 240px; min-width: 240px; box-sizing: border-box; }
+.measurement-board-table td:first-child { width: 240px; min-width: 240px; }
 .measurement-board-table th:not(:first-child),
 .measurement-board-table td:not(:first-child) { width: 120px; min-width: 120px; }
-.measurement-board-table .measurement-group-row th { position: sticky; left: 0; z-index: 2; background: #f3f6f0; text-align: left; }
-.measurement-board-table .measurement-group-row td { background: #f3f6f0; }
-.measurement-board-table .sample-edit-controls { flex-basis: 58px; gap: 10px; }
-.measurement-board-table .measurement-select { flex: 0 0 16px; margin-right: 0; }
 @media (max-width:560px) {
   .measurement-board-table th:first-child,
   .measurement-board-table td:first-child { width: 210px; min-width: 210px; }
@@ -902,32 +914,53 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
   .measurement-board-table td:not(:first-child) { width: 112px; min-width: 112px; }
 }
 
-
+/* Keep Group labels fixed with the Sample column during horizontal scrolling. */
+.measurement-board-table .measurement-group-row th { position: sticky; left: 0; z-index: 4; width: 240px; min-width: 240px; background: #f3f6f0; text-align: left; }
+.measurement-board-table .measurement-group-row td { background: #f3f6f0; }
 @media (max-width:560px) {
-  .measurement-board-card { min-width: 0; }
-  .measurement-board-leading,
-  .measurement-legend,
-  .measurement-board-actions { min-width: 0; width: 100%; }
-  .measurement-legend { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px 12px; }
-  .measurement-legend span { min-width: 0; white-space: nowrap; }
-  .measurement-board-actions > button { box-sizing: border-box; padding: 9px 6px; font-size: 12px; line-height: 1.2; white-space: normal; overflow-wrap: anywhere; }
-  .measurement-board-actions .danger-icon-button { padding: 0; }
+  .measurement-board-table .measurement-group-row th { width: 210px; min-width: 210px; }
 }
 
 @media (max-width:560px) {
-  /* Mobile keeps daily status updates simple; structural editing stays on desktop. */
-  .measurement-board-actions { display: flex; width: auto; justify-content: flex-start; }
-  .measurement-board-actions > button:nth-child(1),
-  .measurement-board-actions > button:nth-child(2),
-  .measurement-board-actions > button:nth-child(4),
-  .measurement-board-actions > button:nth-child(5) { display: none; }
-  .measurement-board-actions > button:nth-child(3) { display: block; width: auto; }
+  .measurement-legend { grid-template-columns: max-content max-content; column-gap: 10px; }
+  .measurement-legend span { display: inline-flex; flex-wrap: nowrap; white-space: nowrap; word-break: keep-all; width: max-content; font-size: 11px; }
 }
 
+.measurement-progress { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; color: var(--muted); font-size: 12px; line-height: 1.4; }
+.measurement-progress span { white-space: nowrap; }
+.measurement-progress b { color: var(--ink); font-weight: 700; }
+
+/* Match the desktop action columns to Delete → Group → Sample → Measurement → Edit. */
+.measurement-board-actions { grid-template-columns: 38px 132px 94px 140px 78px; }
+.measurement-board-actions > button { white-space: nowrap; }
+
+/* Keep the toolbar and viewport width stable while toggling Edit. */
+html { scrollbar-gutter: stable; }
+.measurement-board-actions { width: 522px; min-width: 522px; }
+.measurement-board-tools { min-width: 0; }
 @media (max-width:560px) {
-  /* Remove the hidden edit-control slot so sample names start at the edge. */
-  .measurement-board-table .sample-edit-controls.is-placeholder { display: none; }
-  .measurement-board-table .sample-row-content { gap: 0; }
-  .measurement-board-table tbody tr:not(.measurement-group-row) > th { padding-left: 4px; }
-  .measurement-board-table .sample-label { padding-left: 0; }
+  .measurement-board-actions { width: auto; min-width: 0; }
 }
+
+/* Explicit columns keep the table from reflowing when Edit re-renders it. */
+.measurement-board-table .measurement-sample-column { width: 240px; }
+.measurement-board-table .measurement-column { width: 120px; }
+@media (max-width:560px) {
+  .measurement-board-table .measurement-sample-column { width: 210px; }
+  .measurement-board-table .measurement-column { width: 112px; }
+}
+
+/* Edit/Done only changes visibility; keep toolbar dimensions stable. */
+.measurement-board-actions { grid-template-columns: 38px 94px 94px 140px 78px; width: 484px; min-width: 484px; }
+.measurement-board-actions > button { min-height: 42px; }
+.measurement-board-actions .danger-icon-button { width: 38px; height: 42px; min-height: 42px; padding: 0; }
+
+/* Show Edit-only actions instantly without changing their reserved layout. */
+.measurement-board-actions > button { transition: none; }
+.measurement-board-actions .group-selected-placeholder { opacity: 0; visibility: hidden; pointer-events: none; }
+
+/* Make Edit-only action visibility changes instantaneous. */
+.measurement-board-actions > button,
+.measurement-board-actions > button.group-selected-placeholder { transition: none !important; animation: none !important; }
+.measurement-board-actions > button.group-selected-placeholder { opacity: 0 !important; visibility: hidden !important; }
+.measurement-board-actions > button:not(.group-selected-placeholder) { opacity: 1 !important; visibility: visible !important; }
