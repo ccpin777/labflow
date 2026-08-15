@@ -13,7 +13,12 @@ import webbrowser
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
+APP_DATA = (
+    Path.home() / "Library" / "Application Support" / "LabFlow"
+    if getattr(sys, "frozen", False) and platform.system() == "Darwin"
+    else ROOT / ".webview-data"
+)
 server = None
 window = None
 
@@ -97,7 +102,8 @@ def main() -> None:
     window.events.before_show += lambda: apply_macos_light_titlebar(window)
     window.events.closed += stop_app
     try:
-        webview.start(private_mode=False, storage_path=str(ROOT / ".webview-data"))
+        APP_DATA.mkdir(parents=True, exist_ok=True)
+        webview.start(private_mode=False, storage_path=str(APP_DATA))
     finally:
         stop_app()
         if server is not None:

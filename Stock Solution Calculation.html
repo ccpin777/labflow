@@ -5,291 +5,111 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>wt% Solution Calculator</title>
   <style>
+    @font-face { font-family: "Gochi Hand"; src: url("fonts/GochiHand-Regular.ttf") format("truetype"); font-display: swap; }
+    :root {
+      color-scheme: light;
+      --ink: #29332f;
+      --muted: #68756e;
+      --line: #dfe5df;
+      --paper: #fffefa;
+      --canvas: #f4f7f2;
+      --sage: #dfe9dc;
+      --sage-dark: #56715f;
+      --blue: #e5edf1;
+      --blue-dark: #4e6871;
+      --danger: #9d4d47;
+      --danger-bg: #f8e9e7;
+      --shadow: 0 12px 32px rgba(41, 51, 47, .07);
+    }
+    * { box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
       margin: 0;
-      padding: 40px 20px;
+      min-height: 100vh;
+      padding: 34px 20px 64px;
+      color: var(--ink);
+      background: var(--canvas);
+      font: 14px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
     }
-
-    .container {
-      max-width: 760px;
-      margin: 0 auto;
-      background: white;
-      padding: 24px;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-    }
-
-    h1 {
-      font-size: 24px;
-      margin-bottom: 8px;
-      color: #222;
-    }
-
-    p.desc {
-      color: #666;
-      margin-bottom: 24px;
-    }
-
-    label {
-      display: block;
-      margin-top: 16px;
-      margin-bottom: 6px;
-      font-weight: bold;
-      color: #333;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      box-sizing: border-box;
-    }
-
-    button {
-      width: 100%;
-      margin-top: 24px;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: bold;
-      background: #0066cc;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #0052a3;
-    }
-
-    .secondary-btn {
-      background: #777;
-      margin-top: 12px;
-    }
-
-    .secondary-btn:hover {
-      background: #555;
-    }
-
-    .backup-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .backup-actions button {
-      flex: 1;
-      margin-top: 0;
-      font-size: 14px;
-      padding: 11px;
-    }
-
-    .backup-status {
-      margin-top: 8px;
-      color: #777;
-      font-size: 13px;
-    }
-
-    .action-row {
-      display: flex;
-      align-items: stretch;
-      gap: 10px;
-      margin-top: 24px;
-    }
-
-    .action-row > button {
-      margin-top: 0;
-    }
-
-    .calculate-btn {
-      flex: 1;
-    }
-
-    .icon-btn {
-      width: 48px;
-      flex: 0 0 48px;
-      padding: 0;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: #777;
-    }
-
-    .icon-btn:hover {
-      background: #555;
-    }
-
-    .icon-btn svg {
-      width: 20px;
-      height: 20px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      padding: 20px;
-      background: rgba(24, 35, 45, .32);
-      z-index: 10;
-    }
-
+    .container { width: min(760px, 100%); margin: 0 auto; }
+    .calculator-header { margin-bottom: 20px; }
+    .back-link { color: var(--sage-dark); text-decoration: none; font-size: 13px; font-weight: 700; }
+    .back-link:hover { text-decoration: underline; }
+    .eyebrow { margin: 18px 0 4px; color: var(--sage-dark); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { display: flex; align-items: center; gap: 11px; margin: 0; font: 400 34px/1.15 "Gochi Hand", cursive; letter-spacing: .01em; }
+    .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 11px; color: #fff; background: var(--sage-dark); font: 28px/1 system-ui, sans-serif; transform: rotate(-8deg); }
+    p.desc { max-width: 620px; margin: 10px 0 0; color: var(--muted); }
+    label { display: block; margin: 0 0 7px; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { margin-top: 17px; }
+    .field.full { grid-column: 1 / -1; }
+    input { width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px; outline: none; background: #fff; color: var(--ink); font: inherit; }
+    input:focus { border-color: var(--sage-dark); box-shadow: 0 0 0 3px rgba(86,113,95,.12); }
+    .calculator-card { padding: 25px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); box-shadow: var(--shadow); }
+    button { border: 1px solid transparent; border-radius: 10px; cursor: pointer; font: inherit; font-weight: 700; transition: .18s ease; }
+    button:hover { transform: translateY(-1px); }
+    .action-row { display: flex; align-items: stretch; gap: 8px; margin-top: 23px; }
+    .action-row > button { margin-top: 0; }
+    .calculate-btn { flex: 1; padding: 12px 16px; color: var(--sage-dark); background: transparent; border-color: var(--sage-dark); }
+    .calculate-btn:hover { background: var(--sage); }
+    .icon-btn { width: 44px; flex: 0 0 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; color: var(--muted); background: transparent; border-color: var(--line); }
+    .icon-btn:hover { color: var(--ink); background: var(--sage); border-color: var(--sage-dark); }
+    .icon-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .formula-icon { font-size: 18px; }
+    .backup-status, .small { margin-top: 9px; color: var(--muted); font-size: 12px; }
+    .result { margin-top: 20px; padding: 16px 17px; border: 1px solid #c9d9cb; border-radius: 13px; background: var(--sage); line-height: 1.8; }
+    .result strong { color: var(--sage-dark); }
+    .error { margin-top: 20px; padding: 13px 15px; border-radius: 12px; color: var(--danger); background: var(--danger-bg); }
+    .history { margin-top: 30px; padding-top: 23px; border-top: 1px solid var(--line); }
+    .history h2 { margin: 0 0 15px; font: 400 25px/1.2 "Gochi Hand", cursive; }
+    .record { margin-bottom: 10px; padding: 15px; border: 1px solid var(--line); border-radius: 13px; background: #fff; }
+    .record-title { margin-bottom: 7px; color: var(--sage-dark); font-weight: 800; }
+    .record-row { margin: 3px 0; color: var(--muted); font-size: 13px; }
+    .record-actions { margin-top: 11px; }
+    .delete-btn, .secondary-btn { padding: 8px 12px; color: var(--muted); background: transparent; border-color: var(--line); font-size: 12px; }
+    .delete-btn:hover, .secondary-btn:hover { color: var(--ink); background: var(--sage); border-color: var(--sage-dark); }
+    .delete-btn { color: var(--danger); }
+    .history > .secondary-btn { margin-top: 12px; }
+    .empty { padding: 14px; border-radius: 11px; color: var(--muted); background: #f7faf6; }
+    .modal-backdrop { position: fixed; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(37,48,43,.3); z-index: 10; }
     .modal-backdrop[hidden] { display: none; }
-
-    .modal {
-      width: min(420px, 100%);
-      padding: 24px;
-      border-radius: 16px;
-      background: white;
-      box-shadow: 0 18px 60px rgba(0,0,0,.2);
-    }
-
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-
-    .modal-header h2 { margin: 0; font-size: 20px; color: #222; }
-
-    .close-btn {
-      width: auto;
-      margin: 0;
-      padding: 2px 8px;
-      background: transparent;
-      color: #777;
-      font-size: 24px;
-      font-weight: normal;
-    }
-
-    .close-btn:hover { background: #f0f0f0; color: #222; }
-
-    .result {
-      margin-top: 24px;
-      padding: 16px;
-      background: #eef6ff;
-      border-radius: 12px;
-      color: #222;
-      line-height: 1.8;
-    }
-
-    .error {
-      margin-top: 20px;
-      padding: 12px;
-      background: #ffecec;
-      color: #b30000;
-      border-radius: 10px;
-    }
-
-    .formula {
-      margin-top: 18px;
-      font-size: 14px;
-      color: #666;
-      background: #fafafa;
-      padding: 12px;
-      border-radius: 10px;
-    }
-
-    .small {
-      font-size: 13px;
-      color: #777;
-      margin-top: 8px;
-    }
-
-    .history {
-      margin-top: 32px;
-      padding-top: 20px;
-      border-top: 1px solid #e5e5e5;
-    }
-
-    .history h2 {
-      font-size: 20px;
-      margin-bottom: 16px;
-      color: #222;
-    }
-
-    .record {
-      background: #f9fbfd;
-      border: 1px solid #dde7f0;
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 12px;
-    }
-
-    .record-title {
-      font-weight: bold;
-      color: #1f3b57;
-      margin-bottom: 6px;
-    }
-
-    .record-row {
-      color: #444;
-      font-size: 14px;
-      margin: 2px 0;
-    }
-
-    .record-actions {
-      margin-top: 10px;
-    }
-
-    .delete-btn {
-      width: auto;
-      padding: 8px 12px;
-      font-size: 14px;
-      background: #cc3300;
-      border-radius: 8px;
-      margin-top: 0;
-    }
-
-    .delete-btn:hover {
-      background: #a32900;
-    }
-
-    .empty {
-      color: #777;
-      font-size: 14px;
-      padding: 12px;
-      background: #fafafa;
-      border-radius: 10px;
+    .modal { width: min(440px, 100%); padding: 24px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); box-shadow: 0 25px 70px rgba(20,30,24,.2); }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+    .modal-header h2 { margin: 0; font: 400 25px/1.2 "Gochi Hand", cursive; }
+    .close-btn { width: auto; margin: 0; padding: 2px 8px; color: var(--muted); background: transparent; border: 0; font-size: 23px; font-weight: 400; }
+    .close-btn:hover { color: var(--ink); background: var(--sage); }
+    .formula { padding: 15px; border-radius: 12px; color: var(--muted); background: #f7faf6; line-height: 1.9; }
+    @media (max-width: 600px) {
+      body { padding: 24px 14px 48px; }
+      .calculator-card { padding: 19px; }
+      h1 { font-size: 30px; }
+      .field-grid { grid-template-columns: 1fr; gap: 0; }
+      .field.full { grid-column: auto; }
+      .action-row { flex-wrap: wrap; }
+      .calculate-btn { flex-basis: 100%; }
+      .icon-btn { flex: 1; height: 42px; }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>wt% Solution Calculator</h1>
-    <p class="desc">Given the sample name, solute mass, and target wt%, calculate the final total mass and the amount of solvent to add.</p>
+    <header class="calculator-header">
+      <a class="back-link" href="index.html">← Back to LabFlow</a>
+      <div class="eyebrow">Local tool · No login · Works offline</div>
+      <h1><span class="brand-mark" aria-hidden="true">⌁</span>wt% Solution Calculator</h1>
+      <p class="desc">Calculate the final total mass and solvent to add from a solute mass and target wt%.</p>
+    </header>
 
-    <label for="sampleName">Sample Name</label>
-    <input type="text" id="sampleName" />
-
-    <label for="solute">Solute Mass x (g)</label>
-    <input type="text" id="solute" inputmode="decimal" autocomplete="off" />
-
-    <label for="solventName">Solvent</label>
-    <input type="text" id="solventName" list="commonSolvents" autocomplete="off" />
-    <datalist id="commonSolvents">
-      <option value="DMAc"></option>
-      <option value="DMSO"></option>
-      <option value="CHCl3"></option>
-      <option value="MeCN"></option>
-      <option value="THF"></option>
-    </datalist>
-
-    <label for="wtpercent">Target Concentration y (wt%)</label>
-    <input type="text" id="wtpercent" inputmode="decimal" autocomplete="off" />
-
-    <label for="notes">Notes</label>
-    <input type="text" id="notes" placeholder="Optional notes" />
+    <main class="calculator-card">
+      <div class="field-grid">
+        <div class="field full"><label for="sampleName">Sample name</label><input type="text" id="sampleName" /></div>
+        <div class="field"><label for="solute">Solute mass x (g)</label><input type="text" id="solute" inputmode="decimal" autocomplete="off" /></div>
+        <div class="field"><label for="wtpercent">Target concentration y (wt%)</label><input type="text" id="wtpercent" inputmode="decimal" autocomplete="off" /></div>
+        <div class="field"><label for="solventName">Solvent</label><input type="text" id="solventName" list="commonSolvents" autocomplete="off" /></div>
+        <div class="field"><label for="notes">Notes <span class="small">· optional</span></label><input type="text" id="notes" placeholder="Optional notes" /></div>
+      </div>
+      <datalist id="commonSolvents">
+        <option value="DMAc"></option><option value="DMSO"></option><option value="CHCl3"></option><option value="MeCN"></option><option value="THF"></option>
+      </datalist>
 
     <div class="action-row">
       <button class="calculate-btn" onclick="calculate()">Calculate & Save</button>
@@ -307,6 +127,7 @@
       <div id="historyList"></div>
       <button class="secondary-btn" onclick="clearAllRecords()">Clear All Records</button>
     </div>
+    </main>
   </div>
 
   <div class="modal-backdrop" id="formulaModal" hidden>

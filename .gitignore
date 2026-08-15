@@ -5,3 +5,8 @@ data/
 __pycache__/
 .webview-data/
 data-test/
+# macOS desktop build artifacts
+BuildVenv/
+build/
+dist/
+*.spec
