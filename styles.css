@@ -959,3 +959,12 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
 .modal > .modal-scroll::-webkit-scrollbar-thumb { background: #c8d0c8; border-radius: 999px; border: 2px solid var(--paper); }
 @media (min-width:561px) { .measurement-board-card { overflow-x:auto; } .measurement-board-tools { width:max-content; min-width:100%; } }
 @media (max-width:560px) { .measurement-board-tools { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:10px 12px; } .measurement-board-leading, .measurement-board-actions { display:contents; } .measurement-group-picker { grid-column:1 / -1; grid-row:1; width:100%; } .measurement-progress { grid-column:1; grid-row:2; align-self:center; margin-top:0; } .measurement-board-actions #addMeasurementSample { grid-column:2; grid-row:2; justify-self:end; } .measurement-legend { grid-column:1 / -1; grid-row:3; display:grid; grid-template-columns:max-content max-content; justify-content:start; gap:7px 12px; width:100%; } .measurement-legend span { min-width:0; white-space:nowrap; } .measurement-board-actions #deleteSelectedMeasurements, .measurement-board-actions #groupSelectedMeasurements, .measurement-board-actions #addMeasurementColumn, .measurement-board-actions #toggleMeasurementEdit { display:none; } }
+/* Primary page actions share the compact toolbar treatment. */
+#startButton, #newProcedureButton, #addMeasurementSample, #addMeasurementColumn, #toggleMeasurementEdit, #measurement-group-picker summary { box-sizing:border-box; height:34px; min-height:34px; padding:7px 10px; font-size:12px; font-weight:600; }
+#measurement-group-picker summary { padding-left:11px; }
+.experiments-heading { justify-content:space-between; flex-direction:row; align-items:flex-end; gap:20px; }
+#deleteSelectedMeasurements, #groupSelectedMeasurements { box-sizing:border-box; height:34px; min-height:34px; padding:7px 10px; font-size:12px; font-weight:600; }
+#deleteSelectedMeasurements { width:34px; min-width:34px; padding:0; }
+@media (max-width:560px) { #addMeasurementColumn { display:none; } }
+@media (max-width:560px) { .measurement-legend { display:flex; grid-template-columns:none; flex-wrap:nowrap; gap:8px; overflow-x:auto; scrollbar-width:none; font-size:11px; } .measurement-legend::-webkit-scrollbar { display:none; } .measurement-legend span { flex:0 0 auto; } }
+@media (max-width:760px) { .experiments-heading { align-items:flex-start; flex-direction:column; gap:20px; } }
