@@ -239,7 +239,7 @@ function startModal(initialDate) {
   const templateSelect = document.getElementById("template");
   const otherField = document.getElementById("otherExperimentField");
   const otherNameInput = document.getElementById("otherExperimentName");
-  const updateOtherField = () => { const isOther = templateSelect.value === "Other"; otherField.hidden = !isOther; otherNameInput.required = isOther; if (!isOther) otherNameInput.value = ""; };
+  const updateOtherField = () => { const isOther = templateSelect.value === "Other"; otherField.hidden = !isOther; otherField.style.display = isOther ? "" : "none"; otherNameInput.required = isOther; if (!isOther) otherNameInput.value = ""; };
   const templatePicker = document.getElementById("templatePicker"); document.querySelectorAll("[data-template-option]").forEach(button => button.onclick = () => { templateSelect.value = button.dataset.value; templatePicker.querySelector("summary span").textContent = button.textContent; templatePicker.querySelectorAll("[data-template-option]").forEach(option => option.classList.toggle("is-selected", option === button)); templatePicker.open = false; updateOtherField(); });
   updateOtherField();
   if (initialDate) { const d = new Date(initialDate); const pad = value => String(value).padStart(2, "0"); document.getElementById("startAt").value = pad(d.getMonth() + 1) + "/" + pad(d.getDate()) + " "; document.getElementById("startAt").dispatchEvent(new Event("input", { bubbles: true })); }
