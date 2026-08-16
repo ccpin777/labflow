@@ -955,76 +955,6 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
 /* Responsive rules for the Sample Measurements toolbar. */
 @media (max-width:560px) { .measurement-board-tools { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:10px 12px; } .measurement-board-leading, .measurement-board-actions { display:contents; } .measurement-group-picker { grid-column:1 / -1; grid-row:1; width:100%; } .measurement-progress { grid-column:1 / -1; grid-row:2; align-self:center; margin-top:0; } .measurement-legend { grid-column:1 / -1; grid-row:3; display:flex; flex-wrap:nowrap; gap:8px; width:100%; font-size:12px; } .measurement-legend span { flex:0 0 auto; min-width:0; white-space:nowrap; } #deleteSelectedMeasurements, #groupSelectedMeasurements, #addMeasurementColumn, #toggleMeasurementEdit { display:none; } }
 @media (max-width:760px) { .experiments-heading { align-items:flex-start; flex-direction:column; gap:20px; } }
-.modal:has(.settings-picker) { padding-top: 34px; }
-.modal:has(.settings-picker) > .field { margin-top: 5px; }
-.settings-picker { width: 100%; }
-
-/* Settings layout: separate preferences, profile, and backup areas. */
-.modal:has(.settings-picker) {
-  padding: 26px;
-}
-.modal:has(.settings-picker) .modal-scroll {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px 14px;
-}
-.modal:has(.settings-picker) .modal-header,
-.modal:has(.settings-picker) .settings-backup {
-  grid-column: 1 / -1;
-}
-.modal:has(.settings-picker) .modal-header {
-  margin-bottom: 4px;
-}
-.modal:has(.settings-picker) > .field,
-.modal:has(.settings-picker) .field {
-  margin-top: 0;
-}
-.modal:has(.settings-picker) .field:has(#userNameInput),
-.modal:has(.settings-picker) .field:has(#labLocationInput) {
-  grid-column: 1 / -1;
-}
-.modal:has(.settings-picker) .measurement-group-picker summary {
-  min-height: 40px;
-}
-.modal:has(.settings-picker) .settings-backup {
-  margin-top: 2px;
-  padding-top: 16px;
-}
-@media (max-width: 560px) {
-  .modal:has(.settings-picker) {
-    padding: 23px 20px;
-  }
-  .modal:has(.settings-picker) .modal-scroll {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-  .modal:has(.settings-picker) .modal-header,
-  .modal:has(.settings-picker) .settings-backup,
-  .modal:has(.settings-picker) .field:has(#userNameInput),
-  .modal:has(.settings-picker) .field:has(#labLocationInput) {
-    grid-column: 1;
-  }
-  .modal:has(.settings-picker) .settings-backup {
-    margin-top: 3px;
-  }
-}
-
-/* Add breathing room between the lower Settings fields. */
-.modal:has(.settings-picker) .field:has(#displayFontSelect),
-.modal:has(.settings-picker) .field:has(#todayArtworkSelect),
-.modal:has(.settings-picker) .field:has(#userNameInput),
-.modal:has(.settings-picker) .field:has(#labLocationInput) {
-  padding-top: 10px;
-}
-@media (max-width: 560px) {
-  .modal:has(.settings-picker) .field:has(#displayFontSelect),
-  .modal:has(.settings-picker) .field:has(#todayArtworkSelect),
-  .modal:has(.settings-picker) .field:has(#userNameInput),
-  .modal:has(.settings-picker) .field:has(#labLocationInput) {
-    padding-top: 7px;
-  }
-}
-
 /* Keep the Today artwork directly beside the heading copy. */
 .today-heading .heading-visual {
   margin-left: 0;
@@ -1082,5 +1012,38 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
   }
   .today-heading .heading-actions {
     grid-column: 1 / -1;
+  }
+}
+
+/* Clean Settings layout: one readable column at every screen size. */
+.modal:has(.settings-picker) {
+  padding: 26px 24px;
+}
+.modal:has(.settings-picker) .modal-header {
+  margin-bottom: 24px;
+}
+.modal:has(.settings-picker) .modal-scroll {
+  display: grid;
+  gap: 18px;
+}
+.modal:has(.settings-picker) .field {
+  margin: 0;
+}
+.modal:has(.settings-picker) .measurement-group-picker summary {
+  min-height: 40px;
+}
+.modal:has(.settings-picker) .settings-backup {
+  margin-top: 4px;
+  padding-top: 18px;
+}
+@media (max-width: 560px) {
+  .modal:has(.settings-picker) {
+    padding: 23px 20px;
+  }
+  .modal:has(.settings-picker) .modal-header {
+    margin-bottom: 20px;
+  }
+  .modal:has(.settings-picker) .modal-scroll {
+    gap: 16px;
   }
 }
