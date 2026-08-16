@@ -154,3 +154,17 @@ The Measurements table is a planning/checklist surface for arbitrary samples and
 - Updated `Run.command` to choose Browser or App directly in the existing Terminal; Browser mode no longer requires PyWebView.
 
 Validation: JavaScript syntax, Python compilation, shell syntax, and diff whitespace checks pass.
+
+
+## 2026-08-16
+
+### Responsive interface and display polish
+
+- Reworked Sample Measurements for desktop and PWA layouts, including a compact mobile toolbar and desktop overflow protection.
+- Moved page-level `+ Sample` and `+ Measurement` actions to the page heading; `+ Measurement` and Edit are hidden in PWA mode.
+- Standardized primary page actions and measurement controls at 34px high with 12px semibold text.
+- Reordered Today sections so populated sections appear first while preserving the original Ready, Waiting, Measuring, and Upcoming order.
+- Displayed sample names one per line in Today and Experiments cards.
+- Changed Experimental Procedure location formatting to use `@`.
+
+Validation: JavaScript syntax and diff whitespace checks pass.
