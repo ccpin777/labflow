@@ -169,3 +169,16 @@ Validation: JavaScript syntax, Python compilation, shell syntax, and diff whites
 - Changed Experimental Procedure location formatting to use `@`.
 
 Validation: JavaScript syntax and diff whitespace checks pass.
+
+
+## 2026-08-16
+
+### PyWebView macOS About menu
+
+- Added a macOS application-menu About item that opens the existing HTML `aboutModal()` so the Settings and native-menu About share one UI.
+- Removed the duplicate macOS default About item by identifying the AppKit action selector `orderFrontStandardAboutPanel:` instead of matching the menu title.
+- AppKit menu mutation must run on the Cocoa main thread; scheduling it through `performSelectorOnMainThread_withObject_waitUntilDone_` avoids `NSInternalInconsistencyException`.
+- Diagnostic output is gated behind `LABFLOW_DEBUG=1` so normal launches do not look like failures.
+- The desktop runner now uses the plain window title `LabFlow`; the version remains in the About modal.
+
+Validation: Ran `Run.command` in App mode and confirmed `ABOUT CALLBACK FIRED` and `DEFAULT ABOUT ITEMS REMOVED: 1`.

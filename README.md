@@ -1,10 +1,12 @@
-# LabFlow — Windows browser version
+# LabFlow — browser and macOS desktop app
 
 The cloud version is designed to run from GitHub Pages or another HTTP/HTTPS host. For local testing, use `Run.command` or a local HTTP server; opening `index.html` directly is only suitable for viewing the static layout.
 
 ## Start
 
-For the cloud version, open the GitHub Pages URL. For local testing on macOS, double-click `Run.command`; it starts a local HTTP server at `http://localhost:8000/`. Directly opening `index.html` is only suitable for checking the static layout.
+For the cloud version, open the GitHub Pages URL. For local testing on macOS, run `bash ./Run.command` and choose `1` for Browser or `2` for the PyWebView desktop app. Directly opening `index.html` is only suitable for checking the static layout.
+
+To build the macOS desktop app, run `zsh ./command/build.command`; the completed app is written to `dist/`, and temporary `build/` files are removed after a successful build. For desktop menu diagnostics, use `LABFLOW_DEBUG=1 bash ./Run.command`.
 
 After signing in, experiments, Procedures, calendar planning, and Sample Measurements are stored in Supabase. If Supabase is unavailable, the app reports the cloud connection problem instead of silently pretending that data was synced.
 
