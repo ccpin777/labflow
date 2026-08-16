@@ -670,29 +670,6 @@ button:disabled { cursor: wait; opacity: .72; }
   }
 }
 
-/* Mobile Today: keep the action on the left and give the artwork more room. */
-@media (max-width: 760px) {
-  .today-heading {
-    grid-template-columns: minmax(0, 1fr) 124px;
-    column-gap: 8px;
-  }
-
-  .today-heading .heading-visual {
-    width: 124px;
-    height: 120px;
-  }
-
-  .today-heading .heading-visual img {
-    width: 120px;
-    height: 120px;
-    border-radius: 22px;
-  }
-
-  .today-heading .heading-actions {
-    justify-content: flex-start;
-  }
-}
-
 /* Mobile calendar: the inner panel owns both scroll axes so weekday headers can stay pinned. */
 @media (max-width: 900px) {
   .calendar-grid-wrap {
@@ -840,7 +817,6 @@ body.text-xlarge h2 { font-size: 34px; }
 .measurement-group-menu button:hover, .measurement-group-menu button.is-selected { background:var(--sage); color:var(--ink); }
 
 /* Give the Settings fields a calmer vertical rhythm. */
-.modal:has(.settings-backup) > .field { margin-bottom: 18px; }
 .modal:has(.settings-backup) .settings-backup { margin-top: 24px; }
 .modal:has(.settings-backup) .settings-divider { margin-top: 26px; }
 .group-selected-placeholder { visibility:hidden; pointer-events:none; }
@@ -955,66 +931,6 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
 /* Responsive rules for the Sample Measurements toolbar. */
 @media (max-width:560px) { .measurement-board-tools { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:10px 12px; } .measurement-board-leading, .measurement-board-actions { display:contents; } .measurement-group-picker { grid-column:1 / -1; grid-row:1; width:100%; } .measurement-progress { grid-column:1 / -1; grid-row:2; align-self:center; margin-top:0; } .measurement-legend { grid-column:1 / -1; grid-row:3; display:flex; flex-wrap:nowrap; gap:8px; width:100%; font-size:12px; } .measurement-legend span { flex:0 0 auto; min-width:0; white-space:nowrap; } #deleteSelectedMeasurements, #groupSelectedMeasurements, #addMeasurementColumn, #toggleMeasurementEdit { display:none; } }
 @media (max-width:760px) { .experiments-heading { align-items:flex-start; flex-direction:column; gap:20px; } }
-/* Keep the Today artwork directly beside the heading copy. */
-.today-heading .heading-visual {
-  margin-left: 0;
-}
-@media (max-width: 760px) {
-  .today-heading {
-    column-gap: 0;
-  }
-}
-
-/* Mobile Today: keep the artwork beside the heading without pushing it right. */
-@media (max-width: 760px) {
-  .today-heading {
-    display: grid;
-    grid-template-columns: max-content minmax(0, 124px);
-    column-gap: 0;
-    justify-content: start;
-  }
-  .today-heading .heading-copy {
-    grid-column: 1;
-    min-width: 0;
-  }
-  .today-heading .heading-visual {
-    grid-column: 2;
-    grid-row: 1;
-    justify-self: start;
-  }
-}
-
-/* Restore the original narrow Today layout: artwork stays on the right. */
-@media (max-width: 760px) {
-  .today-heading {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 124px;
-    align-items: start;
-    column-gap: 8px;
-    row-gap: 18px;
-  }
-  .today-heading .heading-copy {
-    grid-column: 1;
-  }
-  .today-heading .heading-visual {
-    display: block;
-    grid-column: 2;
-    grid-row: 1;
-    align-self: start;
-    justify-self: end;
-    width: 124px;
-    height: 120px;
-  }
-  .today-heading .heading-visual img {
-    width: 120px;
-    height: 120px;
-    margin: 0;
-  }
-  .today-heading .heading-actions {
-    grid-column: 1 / -1;
-  }
-}
-
 /* Clean Settings layout: one readable column at every screen size. */
 .modal:has(.settings-picker) {
   padding: 26px 24px;
@@ -1054,5 +970,54 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
     grid-column: auto;
     grid-row: auto;
     width: 100%;
+  }
+}
+
+/* Keep each Settings description above its picker explicitly. */
+.modal:has(.settings-picker) .field {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.modal:has(.settings-picker) .field > label {
+  order: 0;
+}
+.modal:has(.settings-picker) .field > .settings-picker,
+.modal:has(.settings-picker) .field > input {
+  order: 1;
+}
+
+/* Today artwork layout: close to the heading on desktop, right-aligned on mobile. */
+.today-heading .heading-visual {
+  margin-left: 0;
+}
+@media (max-width: 760px) {
+  .today-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 124px;
+    align-items: start;
+    column-gap: 8px;
+    row-gap: 18px;
+  }
+  .today-heading .heading-copy {
+    grid-column: 1;
+  }
+  .today-heading .heading-visual {
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    justify-self: end;
+    width: 124px;
+    height: 120px;
+    margin-left: 0;
+  }
+  .today-heading .heading-visual img {
+    width: 120px;
+    height: 120px;
+    margin: 0;
+  }
+  .today-heading .heading-actions {
+    grid-column: 1 / -1;
   }
 }
