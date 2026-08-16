@@ -163,7 +163,8 @@ Validation: JavaScript syntax, Python compilation, shell syntax, and diff whites
 - Reworked Sample Measurements for desktop and PWA layouts, including a compact mobile toolbar and desktop overflow protection.
 - Moved page-level `+ Sample` and `+ Measurement` actions to the page heading; `+ Measurement` and Edit are hidden in PWA mode.
 - Standardized primary page actions and measurement controls at 34px high with 12px semibold text.
-- Reordered Today sections so populated sections appear first while preserving the original Ready, Waiting, Measuring, and Upcoming order.
+- Reordered Today sections so populated sections appear first while preserving the original Ready, Waiting, Upcoming, and Measuring order.
+- Moved Measuring to the end of the Today section order; desktop builds must be rebuilt to embed the updated ordering.
 - Displayed sample names one per line in Today and Experiments cards.
 - Changed Experimental Procedure location formatting to use `@`.
 
