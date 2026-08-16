@@ -438,11 +438,6 @@ html, body { overflow-x: hidden; }
 .sample-label { display:block; min-width:0; text-align:left; white-space:normal; overflow-wrap:anywhere; word-break:break-word; line-height:1.3; }
 .measurement-board-table th:first-child { white-space:normal; }
 .measurement-label:hover, .measurement-label:focus, .sample-label:hover, .sample-label:focus { border-color:var(--line); background:#fff; outline:none; }
-@media (max-width:560px) {
-  .measurement-board-tools { align-items:flex-start; flex-direction:column; }
-  .measurement-board-actions { justify-content:flex-start; width:auto; }
-  .measurement-board-actions #addMeasurementColumn { display:none; }
-}
 
 .measurement-board-table.is-editing .board-draggable { cursor: grab; }
 .measurement-board-table.is-editing .board-draggable:active { cursor: grabbing; }
@@ -781,8 +776,6 @@ button:disabled { cursor: wait; opacity: .72; }
   }
 }
 
-.experiments-heading { justify-content: flex-start; flex-direction: column; align-items: flex-start; gap: 20px; }
-.experiments-heading .heading-actions { margin-left: 0; }
 
 .field textarea { resize: vertical; min-height: 76px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 9px; background: #fff; color: var(--ink); outline: none; }
 .field textarea:focus { border-color: var(--sage-dark); box-shadow: 0 0 0 3px rgba(86,113,95,.1); }
@@ -921,10 +914,6 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
   .measurement-board-table .measurement-group-row th { width: 210px; min-width: 210px; }
 }
 
-@media (max-width:560px) {
-  .measurement-legend { grid-template-columns: max-content max-content; column-gap: 10px; }
-  .measurement-legend span { display: inline-flex; flex-wrap: nowrap; white-space: nowrap; word-break: keep-all; width: max-content; font-size: 11px; }
-}
 
 .measurement-progress { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; color: var(--muted); font-size: 12px; line-height: 1.4; }
 .measurement-progress span { white-space: nowrap; }
@@ -958,13 +947,12 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
 .modal > .modal-scroll::-webkit-scrollbar-track { background: transparent; }
 .modal > .modal-scroll::-webkit-scrollbar-thumb { background: #c8d0c8; border-radius: 999px; border: 2px solid var(--paper); }
 @media (min-width:561px) { .measurement-board-card { overflow-x:auto; } .measurement-board-tools { width:max-content; min-width:100%; } }
-@media (max-width:560px) { .measurement-board-tools { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:10px 12px; } .measurement-board-leading, .measurement-board-actions { display:contents; } .measurement-group-picker { grid-column:1 / -1; grid-row:1; width:100%; } .measurement-progress { grid-column:1; grid-row:2; align-self:center; margin-top:0; } .measurement-board-actions #addMeasurementSample { grid-column:2; grid-row:2; justify-self:end; } .measurement-legend { grid-column:1 / -1; grid-row:3; display:grid; grid-template-columns:max-content max-content; justify-content:start; gap:7px 12px; width:100%; } .measurement-legend span { min-width:0; white-space:nowrap; } .measurement-board-actions #deleteSelectedMeasurements, .measurement-board-actions #groupSelectedMeasurements, .measurement-board-actions #addMeasurementColumn, .measurement-board-actions #toggleMeasurementEdit { display:none; } }
 /* Primary page actions share the compact toolbar treatment. */
 #startButton, #newProcedureButton, #addMeasurementSample, #addMeasurementColumn, #toggleMeasurementEdit, #measurement-group-picker summary { box-sizing:border-box; height:34px; min-height:34px; padding:7px 10px; font-size:12px; font-weight:600; }
 #measurement-group-picker summary { padding-left:11px; }
 .experiments-heading { justify-content:space-between; flex-direction:row; align-items:flex-end; gap:20px; }
 #deleteSelectedMeasurements, #groupSelectedMeasurements { box-sizing:border-box; height:34px; min-height:34px; padding:7px 10px; font-size:12px; font-weight:600; }
 #deleteSelectedMeasurements { width:34px; min-width:34px; padding:0; }
-@media (max-width:560px) { #addMeasurementColumn { display:none; } }
-@media (max-width:560px) { .measurement-legend { display:flex; grid-template-columns:none; flex-wrap:nowrap; gap:8px; overflow-x:auto; scrollbar-width:none; font-size:11px; } .measurement-legend::-webkit-scrollbar { display:none; } .measurement-legend span { flex:0 0 auto; } }
+/* Responsive rules for the Sample Measurements toolbar. */
+@media (max-width:560px) { .measurement-board-tools { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:10px 12px; } .measurement-board-leading, .measurement-board-actions { display:contents; } .measurement-group-picker { grid-column:1 / -1; grid-row:1; width:100%; } .measurement-progress { grid-column:1 / -1; grid-row:2; align-self:center; margin-top:0; } .measurement-legend { grid-column:1 / -1; grid-row:3; display:flex; flex-wrap:nowrap; gap:8px; width:100%; font-size:12px; } .measurement-legend span { flex:0 0 auto; min-width:0; white-space:nowrap; } #deleteSelectedMeasurements, #groupSelectedMeasurements, #addMeasurementColumn, #toggleMeasurementEdit { display:none; } }
 @media (max-width:760px) { .experiments-heading { align-items:flex-start; flex-direction:column; gap:20px; } }
