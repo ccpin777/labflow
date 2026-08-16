@@ -8,6 +8,7 @@ cd "$PROJECT_DIR"
 
 PYTHON_BIN="${PYTHON_BIN:-python3}"
 BUILD_VENV="$PROJECT_DIR/BuildVenv"
+DEPS_STAMP="$BUILD_VENV/.labflow-desktop-deps"
 BUILD_DIR="$PROJECT_DIR/build"
 DIST_DIR="$PROJECT_DIR/dist"
 ICONSET="$BUILD_DIR/labflow.iconset"
@@ -25,8 +26,12 @@ fail() { echo; echo "Build failed: $1"; exit 1; }
 mkdir -p "$BUILD_DIR" "$DIST_DIR"
 echo "Preparing isolated build environment..."
 "$PYTHON_BIN" -m venv "$BUILD_VENV"
-"$BUILD_VENV/bin/python" -m pip install --upgrade pip setuptools wheel
-"$BUILD_VENV/bin/python" -m pip install -r requirements-desktop.txt pyinstaller
+DEPS_HASH=$(shasum -a 256 requirements-desktop.txt | awk '{print $1}')
+if [[ ! -x "$BUILD_VENV/bin/python" || ! -f "$DEPS_STAMP" || "$(<"$DEPS_STAMP")" != "$DEPS_HASH" ]]; then
+  "$BUILD_VENV/bin/python" -m pip install --upgrade pip setuptools wheel
+  "$BUILD_VENV/bin/python" -m pip install -r requirements-desktop.txt pyinstaller
+  print -r -- "$DEPS_HASH" > "$DEPS_STAMP"
+fi
 
 echo "Preparing macOS App icon..."
 rm -rf "$ICONSET"
@@ -46,10 +51,8 @@ plutil -replace CFBundleVersion -string "$APP_VERSION" "$APP_PATH/Contents/Info.
 find "$APP_PATH" -name .DS_Store -delete
 rm -rf "$APP_FOLDER"
 if command -v codesign >/dev/null 2>&1; then codesign --force --deep --sign - "$APP_PATH"; fi
-
-# Keep the final app and reusable BuildVenv, but remove successful-build intermediates.
 rm -rf "$BUILD_DIR"
+
 
 echo
 printf "Built: %s\n" "$APP_PATH"
-printf "Icon: %s\n" "$ICON_ICNS"

@@ -6,6 +6,7 @@ import argparse
 import http.server
 import os
 import platform
+import re
 import signal
 import sys
 import threading
@@ -14,7 +15,9 @@ from pathlib import Path
 
 
 ROOT = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
-APP_VERSION = "1.0"
+VERSION_TEXT = (ROOT / "version.js").read_text(encoding="utf-8") if (ROOT / "version.js").is_file() else ""
+APP_VERSION_MATCH = re.search(r"LABFLOW_VERSION\s*=\s*\"([^\"]+)\"", VERSION_TEXT)
+APP_VERSION = APP_VERSION_MATCH.group(1) if APP_VERSION_MATCH else "development"
 APP_DATA = (
     Path.home() / "Library" / "Application Support" / "LabFlow"
     if getattr(sys, "frozen", False) and platform.system() == "Darwin"
@@ -102,16 +105,6 @@ def main() -> None:
         raise SystemExit(1)
     threading.Thread(target=server.serve_forever, daemon=True).start()
     window = webview.create_window(f"LabFlow {APP_VERSION}", url, width=1280, height=860, min_size=(900, 600), resizable=True)
-
-    def show_about():
-        if window is not None:
-            window.evaluate_js("aboutModal()")
-
-    from webview.menu import Menu, MenuAction
-    app_menu = [
-        Menu("__app__", [MenuAction("About LabFlow", show_about)]),
-        Menu("Help", [MenuAction("About LabFlow", show_about)]),
-    ]
     if platform.system() == "Darwin":
         webview.settings["SHOW_DEFAULT_MENUS"] = False
 
@@ -119,7 +112,7 @@ def main() -> None:
     window.events.closed += stop_app
     try:
         APP_DATA.mkdir(parents=True, exist_ok=True)
-        webview.start(private_mode=False, storage_path=str(APP_DATA), menu=app_menu)
+        webview.start(private_mode=False, storage_path=str(APP_DATA))
     finally:
         stop_app()
         if server is not None:
