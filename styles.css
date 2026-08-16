@@ -1024,7 +1024,8 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
 .about-button { margin-top: 10px; }
 .about-content { text-align: center; padding: 4px 18px 12px; }
 .about-logo { display: block; width: 128px; height: 128px; object-fit: contain; margin: 4px auto 12px; border-radius: 18px; }
+.about-content h3, .about-tagline, .modal:has(.about-content) .modal-header h2 { font-family: "Gochi Hand", cursive !important; font-weight: 400; letter-spacing: 0; }
 .about-content h3 { margin: 0; font-size: 22px; }
-.about-tagline { margin: 4px 0 18px; color: var(--muted); }
+.about-tagline { margin: 4px 0 18px; color: var(--muted); font-size: 18px; }
 .about-version { margin: 18px 0 0; font-weight: 600; }
 .about-footer { margin: 22px 0 0; color: var(--muted); font-size: 11px; }
