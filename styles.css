@@ -1047,3 +1047,12 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
     gap: 16px;
   }
 }
+
+/* Settings pickers must keep their own grid rows on narrow screens. */
+@media (max-width: 560px) {
+  .modal:has(.settings-picker) .settings-picker {
+    grid-column: auto;
+    grid-row: auto;
+    width: 100%;
+  }
+}
