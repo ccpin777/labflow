@@ -606,7 +606,6 @@ button:disabled { cursor: wait; opacity: .72; }
 .auth-loading .loading-spinner { width: 30px; height: 30px; margin-bottom: 17px; color: var(--sage-dark); border-width: 3px; }
 .auth-loading .subtle { margin-bottom: 0; }
 @keyframes labflow-spin { to { transform: rotate(360deg); } }
-@media (max-width: 760px) { .today-heading { display: grid; grid-template-columns: minmax(0, 1fr) 104px; align-items: start; gap: 18px 10px; } .today-heading .heading-copy { grid-column: 1; } .today-heading .heading-visual { display: block; grid-column: 2; grid-row: 1; align-self: start; justify-self: end; width: 104px; height: 92px; } .today-heading .heading-visual img { width: 92px; height: 92px; border-radius: 17px; margin: 0; } .today-heading .heading-actions { grid-column: 1 / -1; width: 100%; } }
 
 
 .today-heading { justify-content: flex-start; align-items: center; }
@@ -1023,5 +1022,65 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
   .modal:has(.settings-picker) .field:has(#userNameInput),
   .modal:has(.settings-picker) .field:has(#labLocationInput) {
     padding-top: 7px;
+  }
+}
+
+/* Keep the Today artwork directly beside the heading copy. */
+.today-heading .heading-visual {
+  margin-left: 0;
+}
+@media (max-width: 760px) {
+  .today-heading {
+    column-gap: 0;
+  }
+}
+
+/* Mobile Today: keep the artwork beside the heading without pushing it right. */
+@media (max-width: 760px) {
+  .today-heading {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 124px);
+    column-gap: 0;
+    justify-content: start;
+  }
+  .today-heading .heading-copy {
+    grid-column: 1;
+    min-width: 0;
+  }
+  .today-heading .heading-visual {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: start;
+  }
+}
+
+/* Restore the original narrow Today layout: artwork stays on the right. */
+@media (max-width: 760px) {
+  .today-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 124px;
+    align-items: start;
+    column-gap: 8px;
+    row-gap: 18px;
+  }
+  .today-heading .heading-copy {
+    grid-column: 1;
+  }
+  .today-heading .heading-visual {
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    justify-self: end;
+    width: 124px;
+    height: 120px;
+  }
+  .today-heading .heading-visual img {
+    width: 120px;
+    height: 120px;
+    margin: 0;
+  }
+  .today-heading .heading-actions {
+    grid-column: 1 / -1;
   }
 }
