@@ -426,14 +426,23 @@ html, body { overflow-x: hidden; }
 @media (max-width:560px) { .measurement-page-heading { align-items:flex-start; flex-direction:column; } }
 
 .measurement-board-card { margin-top: 22px; padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,254,250,.72); }
-.measurement-board-tools { display:flex; align-items:center; justify-content:space-between; gap:15px; margin-bottom:16px; }.measurement-legend { display:flex; align-items:center; gap:14px; color:var(--muted); font-size:12px; }.measurement-legend span { display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }.measurement-legend b { color:var(--ink); font-size:15px; line-height:1; }
-.measurement-board-actions { display:flex; align-items:center; gap:10px; }
+.measurement-board-tools { display:flex; align-items:center; justify-content:space-between; gap:15px; min-width:0; margin-bottom:16px; }
+.measurement-board-leading { display:flex; align-items:center; gap:14px; min-width:0; flex:1 1 auto; }
+.measurement-board-actions { display:flex; align-items:center; justify-content:flex-end; gap:10px; flex:0 0 auto; flex-wrap:nowrap; white-space:nowrap; }
+.measurement-board-actions > button { flex:0 0 auto; }
+.measurement-board-actions > button { transition: none; animation: none; }
+.measurement-board-actions #toggleMeasurementEdit { min-width:72px; }
+.measurement-legend { display:flex; align-items:center; gap:14px; color:var(--muted); font-size:12px; }.measurement-legend span { display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }.measurement-legend b { color:var(--ink); font-size:15px; line-height:1; }
 .measurement-board-table th { min-width:120px; }
 .measurement-label, .sample-label { width:100%; min-width:105px; padding:7px 8px; border:1px solid transparent; border-radius:7px; background:transparent; color:var(--ink); font:inherit; font-weight:600; text-align:center; }.measurement-label[readonly], .sample-label[readonly] { cursor:default; pointer-events:none; }.drag-handle { display:inline-block; margin-right:5px; color:var(--muted); font-size:14px; line-height:1; letter-spacing:-3px; vertical-align:middle; cursor:grab; } .remove-sample-button { margin-left: 6px; padding: 0 4px; border: 0; border-radius: 5px; background: transparent; color: var(--muted); font: inherit; font-size: 15px; line-height: 1; cursor: pointer; } .remove-sample-button:hover { background: #f1e8dc; color: #9d5740; }
 .sample-label { display:block; min-width:0; text-align:left; white-space:normal; overflow-wrap:anywhere; word-break:break-word; line-height:1.3; }
 .measurement-board-table th:first-child { white-space:normal; }
 .measurement-label:hover, .measurement-label:focus, .sample-label:hover, .sample-label:focus { border-color:var(--line); background:#fff; outline:none; }
-@media (max-width:560px) { .measurement-board-tools { align-items:flex-start; flex-direction:column; } .measurement-board-actions { flex-wrap:wrap; } }
+@media (max-width:560px) {
+  .measurement-board-tools { align-items:flex-start; flex-direction:column; }
+  .measurement-board-actions { justify-content:flex-start; width:auto; }
+  .measurement-board-actions #addMeasurementColumn { display:none; }
+}
 
 .measurement-board-table.is-editing .board-draggable { cursor: grab; }
 .measurement-board-table.is-editing .board-draggable:active { cursor: grabbing; }
@@ -821,10 +830,6 @@ body.text-xlarge h2 { font-size: 34px; }
 .measurement-group-filter:hover { border-color: var(--sage-dark); background-color: var(--sage); }
 .measurement-group-filter:focus-visible { border-color: var(--sage-dark); box-shadow: 0 0 0 3px rgba(86,113,95,.16); }
 
-/* Keep the measurement toolbar stable while Edit changes its contents. */
-.measurement-board-tools { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:16px; }
-.measurement-board-leading { display:flex; align-items:center; gap:14px; min-width:0; }
-.measurement-board-actions { display:flex; align-items:center; justify-content:flex-end; gap:10px; flex-wrap:nowrap; white-space:nowrap; }
 .measurement-group-picker { position:relative; min-width:142px; }
 .measurement-group-picker summary { display:flex; align-items:center; justify-content:space-between; gap:14px; min-height:34px; box-sizing:border-box; padding:7px 10px 7px 11px; border:1px solid var(--line); border-radius:10px; background:var(--paper); color:var(--ink); font-size:12px; font-weight:600; cursor:pointer; list-style:none; }
 .measurement-group-picker summary::-webkit-details-marker { display:none; }
@@ -841,7 +846,6 @@ body.text-xlarge h2 { font-size: 34px; }
 .measurement-group-menu { position:absolute; z-index:20; top:calc(100% + 5px); left:0; min-width:100%; box-sizing:border-box; padding:5px; border:1px solid var(--line); border-radius:10px; background:var(--paper); box-shadow:0 8px 22px rgba(54,62,52,.14); }
 .measurement-group-menu button { display:block; width:100%; padding:8px 9px; border:0; border-radius:7px; background:transparent; color:var(--ink); font:inherit; font-size:12px; text-align:left; cursor:pointer; white-space:nowrap; }
 .measurement-group-menu button:hover, .measurement-group-menu button.is-selected { background:var(--sage); color:var(--ink); }
-@media (max-width:560px) { .measurement-board-tools { align-items:stretch; grid-template-columns:1fr; gap:12px; } .measurement-board-leading { align-items:flex-start; flex-wrap:wrap; } .measurement-board-actions { justify-content:flex-start; flex-wrap:wrap; white-space:normal; } }
 
 /* Give the Settings fields a calmer vertical rhythm. */
 .modal:has(.settings-backup) > .field { margin-bottom: 18px; }
@@ -849,15 +853,9 @@ body.text-xlarge h2 { font-size: 34px; }
 .modal:has(.settings-backup) .settings-divider { margin-top: 26px; }
 .group-selected-placeholder { visibility:hidden; pointer-events:none; }
 
-/* Reserve fixed slots so Edit/Done never moves the neighboring actions. */
-.measurement-board-actions { display:grid; grid-template-columns:132px 94px 124px 76px; align-items:center; justify-content:end; gap:10px; }
-.measurement-board-actions > button { width:100%; box-sizing:border-box; white-space:nowrap; }
-.modal:has(.settings-backup) .settings-account label { font-weight:700; }
-@media (max-width:560px) { .measurement-board-actions { display:grid; grid-template-columns:repeat(6, minmax(0, 1fr)); gap:8px; width:100%; white-space:normal; } .measurement-board-actions > button { width:100%; min-width:0; } .measurement-board-actions > button:nth-child(3) { order:1; grid-column:1 / 4; } .measurement-board-actions > button:nth-child(4) { order:2; grid-column:4 / 7; } .measurement-board-actions > button:nth-child(5) { order:3; grid-column:1 / 3; } .measurement-board-actions > button:nth-child(1) { order:4; grid-column:3 / 6; } .measurement-board-actions > button:nth-child(2) { order:5; grid-column:6 / 7; } }
 
 .measurement-board-table .sample-edit-controls.is-placeholder,
 .measurement-board-table .drag-handle.is-placeholder { visibility:hidden; pointer-events:none; }
-.measurement-board-actions { grid-template-columns:132px 94px 140px 78px; }
 
 /* Keep row actions anchored instead of letting the delete mark resize the table. */
 .measurement-board-table { table-layout:fixed; }
@@ -870,7 +868,6 @@ body.text-xlarge h2 { font-size: 34px; }
 .measurement-board-table .sample-edit-controls .drag-handle { margin:0; }
 .measurement-board-table .sample-edit-controls .remove-sample-button { position:static; transform:none; margin:0; }
 
-.measurement-board-actions { grid-template-columns:132px 38px 94px 140px 78px; }
 .danger-icon-button { width:38px; height:38px; padding:0; border:1px solid #c77b70; border-radius:10px; background:transparent; color:#a64f45; font-size:20px; line-height:1; cursor:pointer; }
 .danger-icon-button:hover { background:#f8e7e3; border-color:#a64f45; }
 .measurement-board-actions .group-selected-placeholder { visibility:hidden; pointer-events:none; }
@@ -901,16 +898,6 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
 
 @media (max-width:560px) {
   .measurement-board-card { min-width: 0; }
-  .measurement-board-leading,
-  .measurement-legend { min-width: 0; width: 100%; }
-  .measurement-legend { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px 12px; }
-  .measurement-legend span { min-width: 0; white-space: nowrap; }
-  .measurement-board-actions { display: flex; width: auto; justify-content: flex-start; }
-  .measurement-board-actions > button:nth-child(1),
-  .measurement-board-actions > button:nth-child(2),
-  .measurement-board-actions > button:nth-child(4),
-  .measurement-board-actions > button:nth-child(5) { display: none; }
-  .measurement-board-actions > button:nth-child(3) { display: block; width: auto; }
   .measurement-board-table .sample-edit-controls { display: none; }
 }
 
@@ -943,17 +930,6 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
 .measurement-progress span { white-space: nowrap; }
 .measurement-progress b { color: var(--ink); font-weight: 700; }
 
-/* Match the desktop action columns to Delete → Group → Sample → Measurement → Edit. */
-.measurement-board-actions { grid-template-columns: 38px 132px 94px 140px 78px; }
-.measurement-board-actions > button { white-space: nowrap; }
-
-/* Keep the toolbar and viewport width stable while toggling Edit. */
-html {  }
-.measurement-board-actions { width: 522px; min-width: 522px; }
-.measurement-board-tools { min-width: 0; }
-@media (max-width:560px) {
-  .measurement-board-actions { width: auto; min-width: 0; }
-}
 
 /* Explicit columns keep the table from reflowing when Edit re-renders it. */
 .measurement-board-table .measurement-sample-column { width: 240px; }
@@ -963,31 +939,7 @@ html {  }
   .measurement-board-table .measurement-column { width: 112px; }
 }
 
-/* Edit/Done only changes visibility; keep toolbar dimensions stable. */
-.measurement-board-actions { grid-template-columns: 46px 94px 110px 150px 78px; width: 518px; min-width: 518px; }
-.measurement-board-actions > button { min-height: 42px; }
-.measurement-board-actions .danger-icon-button { width: 46px; height: 42px; min-height: 42px; padding: 0; }
 
-/* Show Edit-only actions instantly without changing their reserved layout. */
-.measurement-board-actions > button { transition: none; }
-.measurement-board-actions .group-selected-placeholder { opacity: 0; visibility: hidden; pointer-events: none; }
-
-/* Make Edit-only action visibility changes instantaneous. */
-.measurement-board-actions > button,
-.measurement-board-actions > button.group-selected-placeholder { transition: none !important; animation: none !important; }
-.measurement-board-actions > button.group-selected-placeholder { opacity: 0 !important; visibility: hidden !important; }
-.measurement-board-actions > button:not(.group-selected-placeholder) { opacity: 1 !important; visibility: visible !important; }
-
-@media (max-width:560px) {
-  /* Mobile toolbar: legend stays separate; progress and + Sample share one row. */
-  .measurement-board-tools { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px 12px; }
-  .measurement-board-leading { display: contents; }
-  .measurement-group-picker { grid-column: 1 / -1; grid-row: 1; width: 100%; }
-  .measurement-legend { grid-column: 1 / -1; grid-row: 2; width: 100%; }
-  .measurement-progress { grid-column: 1; grid-row: 3; align-self: center; }
-  .measurement-board-actions { display: contents; }
-  .measurement-board-actions > button:nth-child(3) { grid-column: 2; grid-row: 3; justify-self: end; width: auto; }
-}
 
 
 /* Apple Calendar-style current time marker. */
@@ -1005,3 +957,5 @@ html {  }
 .modal > .modal-scroll::-webkit-scrollbar { width: 8px; }
 .modal > .modal-scroll::-webkit-scrollbar-track { background: transparent; }
 .modal > .modal-scroll::-webkit-scrollbar-thumb { background: #c8d0c8; border-radius: 999px; border: 2px solid var(--paper); }
+@media (min-width:561px) { .measurement-board-card { overflow-x:auto; } .measurement-board-tools { width:max-content; min-width:100%; } }
+@media (max-width:560px) { .measurement-board-tools { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:10px 12px; } .measurement-board-leading, .measurement-board-actions { display:contents; } .measurement-group-picker { grid-column:1 / -1; grid-row:1; width:100%; } .measurement-progress { grid-column:1; grid-row:2; align-self:center; margin-top:0; } .measurement-board-actions #addMeasurementSample { grid-column:2; grid-row:2; justify-self:end; } .measurement-legend { grid-column:1 / -1; grid-row:3; display:grid; grid-template-columns:max-content max-content; justify-content:start; gap:7px 12px; width:100%; } .measurement-legend span { min-width:0; white-space:nowrap; } .measurement-board-actions #deleteSelectedMeasurements, .measurement-board-actions #groupSelectedMeasurements, .measurement-board-actions #addMeasurementColumn, .measurement-board-actions #toggleMeasurementEdit { display:none; } }
