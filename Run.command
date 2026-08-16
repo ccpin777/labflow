@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -u
 cd "$(dirname "$0")"
 
 PYTHON_BIN="${LABFLOW_PYTHON:-python3}"
@@ -18,7 +18,8 @@ MODE="${choice:-1}"
 
 case "$MODE" in
   Browser)
-    exec "$PYTHON_BIN" desktop_runner.py --browser
+    "$PYTHON_BIN" desktop_runner.py --browser
+    STATUS=$?
     ;;
   App)
     if ! "$PYTHON_BIN" -c 'import webview' >/dev/null 2>&1; then
@@ -27,9 +28,20 @@ case "$MODE" in
       read -r -p "Press Enter to close."
       exit 1
     fi
-    exec "$PYTHON_BIN" desktop_runner.py
+    "$PYTHON_BIN" desktop_runner.py
+    STATUS=$?
     ;;
   *)
     exit 0
     ;;
 esac
+
+if [ "$STATUS" -ne 0 ]; then
+  echo
+  echo "LabFlow exited with status $STATUS. The error above was captured for diagnosis."
+else
+  echo
+  echo "LabFlow closed."
+fi
+read -r -p "Press Enter to close."
+exit "$STATUS"

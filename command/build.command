@@ -14,11 +14,13 @@ ICONSET="$BUILD_DIR/labflow.iconset"
 ICON_ICNS="$BUILD_DIR/labflow.icns"
 APP_PATH="$DIST_DIR/LabFlow.app"
 APP_FOLDER="$DIST_DIR/LabFlow"
+APP_VERSION=$(sed -n 's/.*"\([0-9.]*\)".*/\1/p' version.js)
 
 fail() { echo; echo "Build failed: $1"; exit 1; }
 [[ "$(uname -s)" == "Darwin" ]] || fail "LabFlow.app must be built on macOS."
 [[ -f "$PROJECT_DIR/desktop_runner.py" ]] || fail "Missing desktop_runner.py."
 [[ -f "$PROJECT_DIR/resources/Appicon-1024.png" ]] || fail "Missing resources/Appicon-1024.png."
+[[ -n "$APP_VERSION" ]] || fail "Could not read version.js."
 
 mkdir -p "$BUILD_DIR" "$DIST_DIR"
 echo "Preparing isolated build environment..."
@@ -37,8 +39,10 @@ iconutil -c icns "$ICONSET" -o "$ICON_ICNS"
 
 rm -rf "$BUILD_DIR/pyinstaller" "$APP_PATH"
 echo "Building LabFlow.app..."
-"$BUILD_VENV/bin/python" -m PyInstaller --noconfirm --clean --windowed --name LabFlow --icon "$ICON_ICNS" --distpath "$DIST_DIR" --workpath "$BUILD_DIR/pyinstaller" --collect-all webview --add-data "$PROJECT_DIR/index.html:." --add-data "$PROJECT_DIR/styles.css:." --add-data "$PROJECT_DIR/app.js:." --add-data "$PROJECT_DIR/supabase-config.js:." --add-data "$PROJECT_DIR/manifest.webmanifest:." --add-data "$PROJECT_DIR/sw.js:." --add-data "$PROJECT_DIR/assets:assets" --add-data "$PROJECT_DIR/fonts:fonts" --add-data "$PROJECT_DIR/resources:resources" --add-data "$PROJECT_DIR/tools:tools" "$PROJECT_DIR/desktop_runner.py"
+"$BUILD_VENV/bin/python" -m PyInstaller --noconfirm --clean --windowed --name LabFlow --icon "$ICON_ICNS" --distpath "$DIST_DIR" --workpath "$BUILD_DIR/pyinstaller" --collect-all webview --add-data "$PROJECT_DIR/index.html:." --add-data "$PROJECT_DIR/styles.css:." --add-data "$PROJECT_DIR/app.js:." --add-data "$PROJECT_DIR/supabase-config.js:." --add-data "$PROJECT_DIR/version.js:." --add-data "$PROJECT_DIR/manifest.webmanifest:." --add-data "$PROJECT_DIR/sw.js:." --add-data "$PROJECT_DIR/assets:assets" --add-data "$PROJECT_DIR/fonts:fonts" --add-data "$PROJECT_DIR/resources:resources" --add-data "$PROJECT_DIR/tools:tools" "$PROJECT_DIR/desktop_runner.py"
 [[ -d "$APP_PATH" ]] || fail "PyInstaller did not create $APP_PATH."
+plutil -replace CFBundleShortVersionString -string "$APP_VERSION" "$APP_PATH/Contents/Info.plist"
+plutil -replace CFBundleVersion -string "$APP_VERSION" "$APP_PATH/Contents/Info.plist"
 find "$APP_PATH" -name .DS_Store -delete
 rm -rf "$APP_FOLDER"
 if command -v codesign >/dev/null 2>&1; then codesign --force --deep --sign - "$APP_PATH"; fi

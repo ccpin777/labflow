@@ -477,7 +477,6 @@ body.font-damion h1, body.font-damion .brand, body.font-damion .auth-brand { fon
 .stage-location-hint { color: var(--sage-dark) !important; font-size: 11px !important; font-weight: 600; }
 .stage.is-current .stage-info strong { color: var(--sage-dark); }
 .stage.is-current .stage-time { color: #a4aaa5; }
-\n.stage-current-arrow { display: block; color: var(--sage-dark); font-size: 18px; font-weight: 700; line-height: 1; }\n
 .stage-current-arrow { display:block; color:var(--sage-dark); font-size:18px; font-weight:700; line-height:1; }
 
 .stage.is-current .stage-time { color:var(--ink); font-weight:700; }
@@ -1021,3 +1020,11 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
     grid-column: 1 / -1;
   }
 }
+
+.about-button { margin-top: 10px; }
+.about-content { text-align: center; padding: 4px 18px 12px; }
+.about-logo { display: block; width: 128px; height: 128px; object-fit: contain; margin: 4px auto 12px; border-radius: 18px; }
+.about-content h3 { margin: 0; font-size: 22px; }
+.about-tagline { margin: 4px 0 18px; color: var(--muted); }
+.about-version { margin: 18px 0 0; font-weight: 600; }
+.about-footer { margin: 22px 0 0; color: var(--muted); font-size: 11px; }

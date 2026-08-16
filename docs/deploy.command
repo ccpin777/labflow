@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 trap 'echo; read -r -p "Deployment failed. Press Enter to close."' ERR
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."
 
 git config user.name "Pin"
 git config user.email "ccpin777@hotmail.com"
