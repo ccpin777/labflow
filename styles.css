@@ -1029,3 +1029,13 @@ body.font-damion .measurement-legend b, body.font-damion .measurement-check { fo
 .about-tagline { margin: 4px 0 18px; color: var(--muted); font-size: 18px; }
 .about-version { margin: 18px 0 0; font-weight: 600; }
 .about-footer { margin: 22px 0 0; color: var(--muted); font-size: 11px; }
+
+/* About is intentionally smaller than the general-purpose modal. */
+.modal:has(.about-content) { width: min(360px, 100%); }
+.modal:has(.about-content) .modal-scroll { padding: 16px 20px 18px; }
+.modal:has(.about-content) .modal-header { margin-bottom: 4px; }
+.modal:has(.about-content) .about-logo { width: 96px; height: 96px; margin: 0 auto 8px; }
+.modal:has(.about-content) .about-content h3 { font-size: 20px; }
+.modal:has(.about-content) .about-tagline { margin: 2px 0 12px; font-size: 16px; }
+.modal:has(.about-content) .about-version { margin-top: 12px; }
+.modal:has(.about-content) .about-footer { margin-top: 14px; }
