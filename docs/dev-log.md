@@ -4,6 +4,17 @@
 
 The current LabFlow state is recorded as the first tracked release baseline: **v1.0**, matching `version.js`.
 
+
+## 1.0 — 2026-08-17 — Maintenance refactor
+
+- Corrected Sample Measurements Plan to count every Planned measurement cell; two samples with two planned tests each correctly produce Plan: 4.
+- Made the progress counts follow the currently selected measurement group.
+- Split feature code into js/auth.js, js/measurements.js, and js/procedures.js; kept the remaining app.js focused on shared state, core views, calendar, settings, and initialization.
+- Updated the browser/PWA script list and PyInstaller resource list so local, PWA, and packaged builds load the same modules.
+- Removed generated .DS_Store and __pycache__ artifacts from the project tree. BuildVenv, dist, .webview-data, and data-test remain in their expected tool/runtime locations.
+- Kept the product version at 1.0 because this is a maintenance and structure change, not a new product release.
+
+
 ---
 
 This document records the major product and implementation decisions made during the prototype phase.
