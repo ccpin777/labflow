@@ -1,5 +1,11 @@
 # LabFlow development log
 
+## 1.0 — 2026-08-17 — Version baseline
+
+The current LabFlow state is recorded as the first tracked release baseline: **v1.0**, matching `version.js`.
+
+---
+
 This document records the major product and implementation decisions made during the prototype phase.
 
 ## 2026-08-13
