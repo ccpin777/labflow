@@ -28,87 +28,6 @@ function normalizeLabLocations() {
 function cloudPayload() { return { schedule: state, templates, measurements: measurementBoard, settings: { userName: configuredUserName(), labLocation: configuredLabLocation() } }; }
 function queueCloudSave() { if (!supabaseClient || !authSession || !cloudHydrated) return; clearTimeout(cloudSaveTimer); setCloudStatus("Saving…", "saving"); const userId = authSession.user.id; cloudSaveTimer = setTimeout(async () => { const { error } = await supabaseClient.from("labflow_data").upsert({ user_id: userId, data: cloudPayload(), updated_at: new Date().toISOString() }); if (error) { setCloudStatus("Cloud save failed", "error"); toast("Cloud save failed"); } else if (authSession?.user.id === userId) setCloudStatus("Saved", "saved"); }, 250); }
 async function loadCloudData() { if (!supabaseClient || !authSession) return false; setCloudStatus("Loading…", "saving"); const { data: row, error } = await supabaseClient.from("labflow_data").select("data").eq("user_id", authSession.user.id).maybeSingle(); if (error) { setCloudStatus("Cloud unavailable", "error"); return false; } if (row?.data) { const payload = row.data; state = payload.schedule || cloneData(INITIAL_LABFLOW_DATA); templates = payload.templates || cloneData(INITIAL_TEMPLATES); normalizeLabLocations(); measurementBoard = payload.measurements || cloneData(INITIAL_MEASUREMENTS); normalizeMeasurementBoard(); if (payload.settings) { localStorage.setItem(USER_NAME_KEY, String(payload.settings.userName || "").trim()); localStorage.setItem(LAB_LOCATION_KEY, String(payload.settings.labLocation || "").trim()); } localStorage.setItem(BROWSER_CLOUD_OWNER_KEY, authSession.user.id); } else { const owner = localStorage.getItem(BROWSER_CLOUD_OWNER_KEY); if (owner && owner !== authSession.user.id) { state = cloneData(INITIAL_LABFLOW_DATA); templates = cloneData(INITIAL_TEMPLATES); measurementBoard = cloneData(INITIAL_MEASUREMENTS); normalizeMeasurementBoard(); localStorage.removeItem(USER_NAME_KEY); localStorage.removeItem(LAB_LOCATION_KEY); } localStorage.setItem(BROWSER_CLOUD_OWNER_KEY, authSession.user.id); cloudHydrated = true; queueCloudSave(); setCloudStatus("Saved", "saved"); return true; } cloudHydrated = true; setCloudStatus("Saved", "saved"); return true; }
-function setAuthLayout(isAuth) { document.body.classList.toggle("auth-mode", isAuth); }
-function enterOfflineMode() { offlineMode = true; authSession = null; cloudHydrated = false; setCloudStatus("Offline", "error"); render(); }
-function renderCloudUnavailable(message = "LabFlow cannot reach Supabase right now.") { setAuthLayout(true); document.querySelector(".app-shell")?.classList.add("auth-locked"); document.getElementById("app").innerHTML = '<div class="auth-page"><section class="auth-card"><div class="auth-brand"><span class="brand-mark" aria-hidden="true">⌁</span><span>LabFlow</span></div><h1>Cloud unavailable</h1><p class="subtle">' + escapeHtml(message) + '</p><p class="subtle">Check your network connection and reload the page.</p><button class="secondary-button offline-button" type="button" id="offlineButton">Continue offline</button></section></div>'; document.getElementById("offlineButton").onclick = enterOfflineMode; }
-function renderLogin() {
-  setAuthLayout(true);
-  document.querySelector(".app-shell")?.classList.add("auth-locked");
-  document.getElementById("app").innerHTML = '<div class="auth-page"><section class="auth-card"><div class="auth-brand"><span class="brand-mark" aria-hidden="true">⌁</span><span>LabFlow</span></div><img class="auth-artwork" src="assets/branding/labflow-branding-01.png" alt="" /><h1 id="authTitle">Welcome back</h1><form id="authForm" class="form"><div class="field"><label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" required><label class="remember-account"><input id="rememberAccount" type="checkbox"> Remember my email</label></div><div class="field"><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" minlength="6" required><small class="subtle" id="authPasswordHint" hidden>New accounts should use at least 12 characters.</small></div><div class="auth-actions"><button class="primary-button" type="submit" data-auth-action="sign-in">Sign in</button><button class="secondary-button" type="button" data-auth-action="sign-up">Create account</button><button class="secondary-button" type="button" data-auth-action="reset">Forgot password</button></div><div id="authError" class="auth-error" role="alert"></div></form><a class="secondary-button calculator-entry" href="tools/Stock%20Solution%20Calculation.html"><span class="calculator-entry-icon" aria-hidden="true">⌗</span> Open Chemistry Calculator</a><button class="secondary-button offline-button" type="button" id="offlineButton">Continue offline</button></section></div>';
-  const form = document.getElementById("authForm");
-  const rememberedEmail = localStorage.getItem(REMEMBERED_EMAIL_KEY) || "";
-  document.getElementById("authEmail").value = rememberedEmail;
-  document.getElementById("rememberAccount").checked = Boolean(rememberedEmail);
-  const title = document.getElementById("authTitle");
-  const submitButton = form.querySelector('[data-auth-action="sign-in"]');
-  const modeButton = form.querySelector('[data-auth-action="sign-up"]');
-  const resetButton = form.querySelector('[data-auth-action="reset"]');
-  const hint = document.getElementById("authPasswordHint");
-  let authMode = "sign-in";
-  const updateMode = () => {
-    const isSignUp = authMode === "sign-up";
-    title.textContent = isSignUp ? "Create account" : "Welcome back";
-    submitButton.textContent = isSignUp ? "Create account" : "Sign in";
-    modeButton.textContent = isSignUp ? "Back to sign in" : "Create account";
-    hint.hidden = !isSignUp;
-    document.getElementById("authError").textContent = "";
-  };
-  form.addEventListener("submit", async event => { event.preventDefault(); await submitAuth(authMode); });
-  modeButton.onclick = () => { authMode = authMode === "sign-in" ? "sign-up" : "sign-in"; updateMode(); };
-  resetButton.onclick = () => submitAuth("reset");
-  document.getElementById("offlineButton").onclick = enterOfflineMode;
-}
-function renderAuthLoading() { setAuthLayout(true); document.querySelector(".app-shell")?.classList.add("auth-locked"); document.getElementById("app").innerHTML = '<div class="auth-page"><section class="auth-card auth-loading" aria-live="polite"><div class="auth-brand"><span class="brand-mark" aria-hidden="true">⌁</span><span>LabFlow</span></div><div class="loading-spinner" aria-hidden="true"></div><p class="subtle">Loading LabFlow…</p></section></div>'; }
-function renderPasswordUpdate() { setAuthLayout(true); document.querySelector(".app-shell")?.classList.add("auth-locked"); document.getElementById("app").innerHTML = '<div class="auth-page"><section class="auth-card"><div class="auth-brand"><span class="brand-mark" aria-hidden="true">⌁</span><span>LabFlow</span></div><h1>Set new password</h1><form id="passwordUpdateForm" class="form"><div class="field"><label for="newPassword">New password</label><input id="newPassword" type="password" minlength="12" autocomplete="new-password" required></div><div class="field"><label for="confirmPassword">Confirm password</label><input id="confirmPassword" type="password" minlength="12" autocomplete="new-password" required></div><div class="auth-actions"><button class="primary-button" type="submit">Save password</button></div><div id="passwordUpdateError" class="auth-error" role="alert"></div></form></section></div>'; document.getElementById("passwordUpdateForm").onsubmit = async event => { event.preventDefault(); const errorNode = document.getElementById("passwordUpdateError"), password = document.getElementById("newPassword").value, confirmation = document.getElementById("confirmPassword").value; errorNode.textContent = password === confirmation ? "" : "Passwords do not match."; if (errorNode.textContent) return; const { error } = await supabaseClient.auth.updateUser({ password }); if (error) { errorNode.textContent = error.message; return; } await supabaseClient.auth.signOut(); window.history.replaceState({}, document.title, window.location.pathname); }; }
-async function submitAuth(action) {
-  const form = document.getElementById("authForm");
-  const activeButton = action === "reset" ? form?.querySelector('[data-auth-action="reset"]') : form?.querySelector('[data-auth-action="sign-in"]');
-  if (!form || !activeButton || activeButton.disabled) return;
-  const originalLabel = activeButton.textContent;
-  form.querySelectorAll("button").forEach(button => { button.disabled = true; });
-  activeButton.classList.add("is-loading");
-  activeButton.innerHTML = '<span class="button-spinner" aria-hidden="true"></span><span>' + (action === "reset" ? "Sending…" : action === "sign-up" ? "Creating…" : "Signing in…") + '</span>';
-  const email = document.getElementById("authEmail").value.trim();
-  if (document.getElementById("rememberAccount")?.checked) localStorage.setItem(REMEMBERED_EMAIL_KEY, email);
-  else localStorage.removeItem(REMEMBERED_EMAIL_KEY);
-  const password = document.getElementById("authPassword").value;
-  const errorNode = document.getElementById("authError");
-  errorNode.textContent = "";
-  if (action === "sign-up" && password.length < 12) {
-    errorNode.textContent = "New passwords must be at least 12 characters.";
-    form.querySelectorAll("button").forEach(button => { button.disabled = false; });
-    activeButton.classList.remove("is-loading");
-    activeButton.textContent = originalLabel;
-    return;
-  }
-  try {
-    if (action === "reset") {
-      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + window.location.pathname });
-      errorNode.textContent = error ? error.message : "Password reset email sent. Check your inbox.";
-      return;
-    }
-    const result = action === "sign-up"
-      ? await supabaseClient.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin + window.location.pathname } })
-      : await supabaseClient.auth.signInWithPassword({ email, password });
-    if (result.error) {
-      errorNode.textContent = result.error.message;
-      return;
-    }
-    if (action === "sign-up" && !result.data.session) errorNode.textContent = "Account created. Check your email to confirm it, then sign in.";
-  } catch (error) {
-    const message = String(error?.message || "");
-    errorNode.textContent = /fetch|network|load|connect/i.test(message)
-      ? "Cannot reach LabFlow Cloud from this network. Check the company firewall or try the local calculator instead."
-      : message || "Sign in failed. Please try again.";
-  } finally {
-    form.querySelectorAll("button").forEach(button => { button.disabled = false; });
-    activeButton.classList.remove("is-loading");
-    activeButton.textContent = originalLabel;
-  }
-}
-function withTimeout(promise, ms) { return Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new Error("Cloud connection timed out")), ms))]); }
-function waitForSupabase(ms = 5000) { return new Promise(resolve => { const started = Date.now(); const check = () => { if (window.supabase?.createClient) return resolve(window.supabase); if (Date.now() - started >= ms) return resolve(null); setTimeout(check, 50); }; check(); }); }
-async function initializeAuth() { if (!CLOUD_CONFIGURED) { authReady = true; render(); return; } if (!supabaseClient) { const sdk = await waitForSupabase(); if (sdk?.createClient) supabaseClient = sdk.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } if (!supabaseClient) { offlineMode = true; authReady = true; setCloudStatus("Offline", "error"); render(); return; } try { const { data, error } = await withTimeout(supabaseClient.auth.getSession(), 5000); if (error) throw error; authSession = data.session; } catch (error) { offlineMode = true; authSession = null; setCloudStatus("Offline", "error"); } if (authSession && !(await loadCloudData())) { authReady = true; renderCloudUnavailable(); return; } authReady = true; render(); supabaseClient.auth.onAuthStateChange(async (event, session) => { if (offlineMode) return; authSession = session; cloudHydrated = false; if (event === "PASSWORD_RECOVERY") { renderPasswordUpdate(); return; } if (session) { if (await loadCloudData()) render(); else renderCloudUnavailable(); } else { setCloudStatus("Signed out"); render(); } }); }
 const BROWSER_STATE_KEY = "labflow-browser-state-v1";
 const BROWSER_TEMPLATES_KEY = "labflow-browser-templates-v2";
 const BROWSER_MEASUREMENTS_KEY = "labflow-browser-measurements-v1";
@@ -123,27 +42,6 @@ let measurementBoard = { measurements: [], samples: [], cells: [], groups: [], s
 let measurementBoardEditing = false;
 let measurementBoardGroupFilter = "all";
 let procedureEditingName = null;
-function saveMeasurementBoard() { browserWrite(BROWSER_MEASUREMENTS_KEY, measurementBoard); queueCloudSave(); }
-function normalizeMeasurementBoard() {
-  measurementBoard.measurements = Array.isArray(measurementBoard.measurements) ? measurementBoard.measurements : [];
-  measurementBoard.samples = Array.isArray(measurementBoard.samples) ? measurementBoard.samples : [];
-  measurementBoard.groups = Array.isArray(measurementBoard.groups) ? measurementBoard.groups : [];
-  if (!measurementBoard.groups.some(group => group.id === "ungrouped")) {
-    measurementBoard.groups.unshift({ id: "ungrouped", name: "Ungrouped", collapsed: false });
-  }
-  const groupIds = new Set(measurementBoard.groups.map(group => group.id));
-  measurementBoard.sampleGroups = measurementBoard.samples.map((_, index) =>
-    groupIds.has(measurementBoard.sampleGroups?.[index]) ? measurementBoard.sampleGroups[index] : "ungrouped"
-  );
-  measurementBoard.groups = measurementBoard.groups.filter(group => group.id === "ungrouped" || measurementBoard.sampleGroups.includes(group.id));
-  if (measurementBoardGroupFilter !== "all" && !measurementBoard.groups.some(group => group.id === measurementBoardGroupFilter)) measurementBoardGroupFilter = "all";
-  measurementBoard.cells = measurementBoard.samples.map((_, r) =>
-    measurementBoard.measurements.map((_, c) => {
-      const value = measurementBoard.cells?.[r]?.[c];
-      return value === "planned" || value === "delegated" || value === "completed" || value === "not-required" ? value : "";
-    })
-  );
-}
 normalizeMeasurementBoard();
 let state = { experiments: [] };
 function isMeasurementStage(stage) { const name = String(stage?.name || "").trim().toLowerCase(); return ["measurement", "measurements", "measurment", "measurments"].includes(name) || name.includes("measurement"); }
@@ -153,7 +51,6 @@ function sampleCount(exp) { return Array.isArray(exp.samples) && exp.samples.len
 function calendarStageHours(stage, exp) { return Number(stage.duration) * (isMeasurementStage(stage) ? sampleCount(exp) : 1); }
 function experimentColor(exp) { let hash = 0; for (const char of exp.id || exp.template) hash = (hash * 31 + char.charCodeAt(0)) % 7; return "experiment-color-" + hash; }
 const save = () => { browserWrite(BROWSER_STATE_KEY, state); queueCloudSave(); };
-function loadMeasurementBoard() { measurementBoard = browserRead(BROWSER_MEASUREMENTS_KEY, INITIAL_MEASUREMENTS); normalizeMeasurementBoard(); render(); }
 function loadState() { templates = browserRead(BROWSER_TEMPLATES_KEY, INITIAL_TEMPLATES); state = browserRead(BROWSER_STATE_KEY, INITIAL_LABFLOW_DATA); normalizeLabLocations(); if (document.getElementById("modalBackdrop")?.hidden !== false) render(); }
 const fmtTime = iso => new Date(iso).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
 const fmtDateTime = iso => new Date(iso).toLocaleDateString([], { month: "short", day: "numeric" }) + " · " + fmtTime(iso);
@@ -295,62 +192,6 @@ function completeChoice(id) {
 }
 function openTimeChoice(id) { openModal(`<div class="modal-header"><div><span class="eyebrow">Actual transition</span><h2 id="modalTitle">When did it happen?</h2></div><button class="close" aria-label="Close">×</button></div><form class="form" id="timeForm"><div class="field"><label for="actualTime">Actual completion / start time · MM/DD HH:mm AM/PM</label><div class="lab-time-input"><input id="actualTime" type="text" inputmode="text" maxlength="15" placeholder="MM/DD HH:mm AM/PM" required /></div><div class="time-preview" id="actualTimePreview"></div></div><div class="form-actions"><button type="button" class="secondary-button close">Cancel</button><button class="primary-button">Save transition</button></div></form></div>`); setupLabTimeInput("actualTime"); document.getElementById("timeForm").onsubmit = e => { e.preventDefault(); const when = parseLabTime(readLabTime("actualTime")); if (validDate(when)) advance(id, when); }; }
 function advance(id, when) { const e = state.experiments.find(x => x.id === id), index = e.stages.findIndex(s => s.status === "current"); e.stages[index].status = "completed"; e.stages[index].completedAt = when.toISOString(); const next = e.stages[index + 1]; if (next) { next.status = "current"; next.startedAt = when.toISOString(); next.plannedStartAt = null; next.readyAt = next.duration && !isMeasurementStage(next) ? new Date(when.getTime() + next.duration*3600000).toISOString() : null; } else e.status = "completed"; save(); closeModal(); render(); toast(next ? `Started ${next.name} at ${fmtTime(when.toISOString())}` : `${experimentLabel(e)} completed`); }
-function measurementGroupFilterMarkup() {
-  const selected = measurementBoard.groups.find(group => group.id === measurementBoardGroupFilter);
-  const label = selected ? selected.name : "All groups";
-  return '<details class="measurement-group-picker" id="measurement-group-picker"><summary><span>' + escapeHtml(label) + '</span><span class="measurement-group-chevron" aria-hidden="true"></span></summary><div class="measurement-group-menu" role="menu">' +
-    '<button type="button" data-measurement-group-option="all"' + (measurementBoardGroupFilter === "all" ? ' class="is-selected"' : '') + '>All groups</button>' +
-    measurementBoard.groups.filter(group => measurementBoard.sampleGroups.includes(group.id)).map(group => '<button type="button" data-measurement-group-option="' + escapeHtml(group.id) + '"' + (measurementBoardGroupFilter === group.id ? ' class="is-selected"' : '') + '>' + escapeHtml(group.name) + '</button>').join("") +
-    '</div></details>';
-}
-function measurementRow(r, editing) {
-  const name = measurementBoard.samples[r];
-  let html = '<tr draggable="' + editing + '" data-board-kind="row" data-board-index="' + r + '" class="' + (editing ? 'board-draggable' : '') + '"><th>';
-  html += '<div class="sample-row-content"><div class="sample-edit-controls' + (editing ? '' : ' is-placeholder') + '"><input class="measurement-select" type="checkbox" data-measurement-select="' + r + '" aria-label="Select ' + escapeHtml(name) + '"><span class="drag-handle" title="Drag to reorder" aria-label="Drag to reorder" role="img">⠿</span></div>';
-  html += '<input class="sample-label" data-sample-label="' + r + '" value="' + escapeHtml(name) + '" aria-label="Sample ' + (r + 1) + '"' + (editing ? '' : ' readonly') + '>';
-  html += '</div></th>';
-  measurementBoard.measurements.forEach((_, c) => {
-    const cell = measurementBoard.cells[r][c];
-    const label = cell === "completed" ? "Completed" : cell === "not-required" ? "Not required" : cell === "delegated" ? "Delegated" : cell === "planned" ? "Planned" : "Not planned";
-    const mark = cell === "completed" ? "✓" : cell === "not-required" ? "×" : cell === "delegated" ? "△" : cell === "planned" ? "○" : "";
-    html += '<td><button type="button" class="measurement-check status-' + (cell || "empty") + '" data-board-cell="' + r + ':' + c + '" aria-label="' + label + '">' + mark + '</button></td>';
-  });
-  return html + '</tr>';
-}
-function renderMeasurementRows(editing) {
-  let html = "";
-  measurementBoard.groups.forEach(group => {
-    const indices = measurementBoard.samples.map((_, index) => index).filter(index => measurementBoard.sampleGroups[index] === group.id).filter(index => measurementBoardGroupFilter === "all" || measurementBoardGroupFilter === group.id);
-    if (!indices.length) return;
-    html += '<tr class="measurement-group-row"><th><span class="measurement-group-name">' + escapeHtml(group.name) + '</span> <span class="measurement-group-count">(' + indices.length + ' samples)</span></th><td colspan="' + measurementBoard.measurements.length + '"></td></tr>';
-    indices.forEach(index => { html += measurementRow(index, editing); });
-  });
-  return html;
-}
-function measurementProgressMarkup() {
-  const visibleRows = measurementBoard.samples.map((_, row) => row).filter(row =>
-    measurementBoardGroupFilter === "all" || measurementBoard.sampleGroups[row] === measurementBoardGroupFilter
-  );
-  const visibleCells = visibleRows.flatMap(row => measurementBoard.cells[row] || []);
-  const total = visibleRows.length * measurementBoard.measurements.length;
-  const notRequired = visibleCells.filter(cell => cell === "not-required").length;
-  const done = visibleCells.filter(cell => cell === "completed").length;
-  const delegated = visibleCells.filter(cell => cell === "delegated").length;
-  const plannedSamples = visibleRows.filter(row => (measurementBoard.cells[row] || []).includes("planned")).length;
-  const effectiveTotal = Math.max(0, total - notRequired);
-  const rest = Math.max(0, total - notRequired - done - delegated);
-  return '<div class="measurement-progress" aria-label="Measurement progress"><span>Total: <b>' + effectiveTotal + '</b></span><span>Plan: <b>' + plannedSamples + '</b></span><span>Rest: <b>' + rest + '</b></span></div>';
-}
-function renderMeasurements() {
-  normalizeMeasurementBoard();
-  const editing = measurementBoardEditing;
-  return '<div class="page"><div class="page-heading"><div class="heading-copy"><h1>Sample Measurements</h1></div><div class="heading-actions"><button type="button" class="secondary-button" id="addMeasurementSample">+ Sample</button><button type="button" class="secondary-button" id="addMeasurementColumn">+ Measurement</button></div></div>' +
-    '<section class="measurement-board-card"><div class="measurement-board-tools"><div class="measurement-board-leading">' + measurementGroupFilterMarkup() + measurementProgressMarkup() + '<div class="measurement-legend" aria-label="Measurement status legend"><span><b>○</b> Planned</span><span><b>△</b> Delegated</span><span><b>✓</b> Done</span><span><b>×</b> Not required</span></div>' +
-    '</div><div class="measurement-board-actions">' + (editing ? '<button type="button" class="danger-icon-button" id="deleteSelectedMeasurements" aria-label="Delete selected samples" title="Delete selected samples"><svg class="trash-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 10v7M14 10v7" /></svg></button><button type="button" class="secondary-button" id="groupSelectedMeasurements">Group</button>' : '<button type="button" class="danger-icon-button group-selected-placeholder" id="deleteSelectedMeasurements" tabindex="-1" aria-hidden="true"><svg class="trash-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 10v7M14 10v7" /></svg></button><button type="button" class="secondary-button group-selected-placeholder" id="groupSelectedMeasurements" tabindex="-1" aria-hidden="true">Group</button>') + '<button type="button" class="secondary-button" id="toggleMeasurementEdit">' + (editing ? "Done" : "Edit") + '</button>' +
-    '</div></div><div class="measurement-table-wrap"><table class="measurement-table measurement-board-table ' + (editing ? "is-editing" : "") + '"><colgroup><col class="measurement-sample-column">' + measurementBoard.measurements.map(() => '<col class="measurement-column">').join("") + '</colgroup><thead><tr><th>Sample</th>' +
-    measurementBoard.measurements.map((name, i) => '<th draggable="' + editing + '" data-board-kind="column" data-board-index="' + i + '" class="' + (editing ? "board-draggable" : "") + '">' + '<span class="drag-handle' + (editing ? '' : ' is-placeholder') + '" aria-hidden="true">⠿</span>' + '<input class="measurement-label" data-measurement-label="' + i + '" value="' + escapeHtml(name) + '" aria-label="Measurement ' + (i + 1) + '"' + (editing ? "" : " readonly") + '></th>').join("") +
-    '</tr></thead><tbody>' + renderMeasurementRows(editing) + '</tbody></table></div></section></div>';
-}
 function renderProcedures() { return `<div class="page"><div class="page-heading"><div class="heading-copy"><h1>Experimental Procedure</h1></div><button class="primary-button" id="newProcedureButton">+ Procedure</button></div><div class="procedure-list">${Object.values(templates).map(function (template) { return `<article class="procedure-card" data-procedure="${escapeHtml(template.name)}"><div class="procedure-heading"><div><h2>${escapeHtml(template.name)}</h2></div><span class="count">${template.stages.length} stages</span></div><div class="procedure-stages">${template.stages.map(function (stage, index) { return `<div class="procedure-stage"><span class="procedure-number">${index + 1}</span><div><span class="procedure-stage-name-display${isMeasurementStage(stage) ? " measurement-stage-name-display" : ""}">${escapeHtml(stage.name)}</span><span>${stage.duration ? (stage.duration >= 1 ? stage.duration + " h" : Math.round(stage.duration * 60) + " min") + (isMeasurementStage(stage) ? " / sample" : "") : "Duration variable"}${stage.location ? " @ " + escapeHtml(stage.location) : ""}</span></div></div>`; }).join("")}</div></article>`; }).join("")}</div></div>`; }
 function setMeasurementEditing(editing) {
   measurementBoardEditing = editing;
@@ -393,19 +234,6 @@ window.setInterval(() => {
   if (document.getElementById("modalBackdrop")?.hidden === false) return;
   render();
 }, 60000);
-function renumberProcedureStages() { document.querySelectorAll("#procedureStageRows .procedure-stage-index").forEach((node, index) => { node.textContent = index + 1; }); }
-
-
-
-function updateProcedureMeasurementHint(row) { const name = row.querySelector(".procedure-stage-name").value.trim().toLowerCase(); const hint = row.querySelector(".procedure-stage-hint"); const input = row.querySelector(".procedure-stage-name"); const isMeasurementName = ["measure", "measurement", "measurements"].includes(name); if (hint) hint.hidden = !isMeasurementStage({ name }); if (input) input.classList.toggle("measurement-stage-name", isMeasurementName); }
-function addProcedureStageRow(stage) { const holder = document.getElementById("procedureStageRows"); const row = document.createElement("div"); row.className = "procedure-edit-row"; row.innerHTML = '<span class="procedure-stage-index">' + (holder.children.length + 1) + '</span><input class="procedure-stage-name" required><input class="procedure-stage-duration" type="number" min="0" step="any" value="24"><select class="procedure-stage-unit"><option value="h">h</option><option value="min">min</option></select><input class="procedure-stage-location" placeholder="Optional location"><button type="button" class="secondary-button" data-remove-stage>×</button><small class="procedure-stage-hint" hidden>Measurement time: <strong>per sample</strong></small>'; holder.appendChild(row); if (stage) { row.querySelector(".procedure-stage-name").value = stage.name || ""; const duration = Number(stage.duration) || 0; row.querySelector(".procedure-stage-duration").value = duration >= 1 || duration === 0 ? duration : Math.round(duration * 60); row.querySelector(".procedure-stage-unit").value = duration >= 1 || duration === 0 ? "h" : "min"; row.querySelector(".procedure-stage-location").value = stage ? (stage.location || "") : configuredLabLocation(); } else { row.querySelector(".procedure-stage-location").value = configuredLabLocation(); } row.querySelector(".procedure-stage-name").addEventListener("input", () => updateProcedureMeasurementHint(row)); row.querySelector("[data-remove-stage]").onclick = function () { row.remove(); renumberProcedureStages(); }; updateProcedureMeasurementHint(row); }
-function procedureFormModal() { const editingName = procedureEditingName; const existing = editingName ? templates[editingName] : null; openModal('<div class="modal-header"><div><h2 id="modalTitle">' + (existing ? 'Edit Procedure' : 'New Procedure') + '</h2></div><button class="close" aria-label="Close">×</button></div><form class="form" id="procedureForm"><div class="field"><label>Procedure name</label><input id="procedureName" required></div><div class="field"><label>Stages</label><div id="procedureStageRows"></div><button type="button" class="secondary-button" id="addProcedureStage">+ Add stage</button></div><div class="form-actions"><button type="button" class="secondary-button close">Cancel</button><button class="primary-button">Save</button></div></form>'); document.getElementById("procedureName").value = editingName || ""; if (existing?.stages?.length) existing.stages.forEach(stage => addProcedureStageRow(stage)); else addProcedureStageRow(); document.getElementById("addProcedureStage").onclick = () => addProcedureStageRow(); document.getElementById("procedureForm").onsubmit = function (event) { event.preventDefault(); const name = document.getElementById("procedureName").value.trim(); const stages = Array.from(document.querySelectorAll(".procedure-edit-row")).map(row => ({ name: row.querySelector(".procedure-stage-name").value.trim(), duration: (Number(row.querySelector(".procedure-stage-duration").value) || 0) * (row.querySelector(".procedure-stage-unit").value === "min" ? 1 / 60 : 1), location: row.querySelector(".procedure-stage-location").value.trim() })); if (!stages.length || !name) return; if (editingName && editingName !== name) delete templates[editingName]; templates[name] = { name, stages }; browserWrite(BROWSER_TEMPLATES_KEY, templates); procedureEditingName = null; closeModal(); render(); toast(name + " procedure saved"); }; }
-function newProcedureModal() { procedureEditingName = null; procedureFormModal(); }
-function editProcedureModal(name) { if (!templates[name]) return; procedureEditingName = name; procedureFormModal(); }
-
-document.addEventListener("dblclick", event => { const card = event.target.closest?.(".procedure-card"); if (card) editProcedureModal(card.dataset.procedure); });
-
-
 function calendarEventReadyMarker(className, title, body, experimentId, start, end, blockId, lane, laneCount) { const detail = encodeURIComponent(JSON.stringify({ title: title, body: body })); const experimentAttr = experimentId ? ' data-calendar-experiment="' + experimentId + '"' : ''; const blockAttr = blockId ? ' data-calendar-block="' + blockId + '"' : ''; const startDate = start ? new Date(start) : null; const endDate = end ? new Date(end) : null; const hour = startDate ? startDate.getHours() + startDate.getMinutes() / 60 : 8; const duration = startDate && endDate ? Math.max(.5, (endDate - startDate) / 3600000) : .5; const top = Math.max(0, Math.min(24, hour)) * 56; const height = Math.max(24, Math.min(24, duration) * 56); const style = startDate ? ' style="top:' + top + 'px;height:' + height + 'px;--event-lane:' + (lane || 0) + ';--event-lanes:' + (laneCount || 1) + '"' : ''; const experiment = experimentId ? state.experiments.find(x => x.id === experimentId) : null; const tooltip = experiment ? experimentTooltip(experiment) : title; const safeTooltip = String(tooltip).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); const ready = className.includes('ready-marker'); const visibleTitle = ready ? "<span class=\"ready-icon\" aria-hidden=\"true\">✓</span>" + escapeHtml(title) : escapeHtml(title); const visibleBody = escapeEventBody(body); return '<div class="calendar-event ' + className + '" data-calendar-detail="' + detail + '"' + experimentAttr + blockAttr + style + ' title="' + safeTooltip + '" aria-label="' + safeTooltip + '"><strong>' + visibleTitle + '</strong><span class="event-body">' + visibleBody + '</span></div>'; }
 function calendarEvent(className, title, body, experimentId, start, end, blockId, lane, laneCount) { return calendarEventReadyMarker(className, title, body, experimentId, start, end, blockId, lane, laneCount); }
 

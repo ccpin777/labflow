@@ -44,7 +44,7 @@ iconutil -c icns "$ICONSET" -o "$ICON_ICNS"
 
 rm -rf "$BUILD_DIR/pyinstaller" "$APP_PATH"
 echo "Building LabFlow.app..."
-"$BUILD_VENV/bin/python" -m PyInstaller --noconfirm --clean --windowed --name LabFlow --icon "$ICON_ICNS" --distpath "$DIST_DIR" --workpath "$BUILD_DIR/pyinstaller" --collect-all webview --add-data "$PROJECT_DIR/index.html:." --add-data "$PROJECT_DIR/styles.css:." --add-data "$PROJECT_DIR/app.js:." --add-data "$PROJECT_DIR/supabase-config.js:." --add-data "$PROJECT_DIR/version.js:." --add-data "$PROJECT_DIR/manifest.webmanifest:." --add-data "$PROJECT_DIR/sw.js:." --add-data "$PROJECT_DIR/assets:assets" --add-data "$PROJECT_DIR/fonts:fonts" --add-data "$PROJECT_DIR/resources:resources" --add-data "$PROJECT_DIR/tools:tools" "$PROJECT_DIR/desktop_runner.py"
+"$BUILD_VENV/bin/python" -m PyInstaller --noconfirm --clean --windowed --name LabFlow --icon "$ICON_ICNS" --distpath "$DIST_DIR" --workpath "$BUILD_DIR/pyinstaller" --collect-all webview --add-data "$PROJECT_DIR/index.html:." --add-data "$PROJECT_DIR/styles.css:." --add-data "$PROJECT_DIR/app.js:." --add-data "$PROJECT_DIR/js:js" --add-data "$PROJECT_DIR/supabase-config.js:." --add-data "$PROJECT_DIR/version.js:." --add-data "$PROJECT_DIR/manifest.webmanifest:." --add-data "$PROJECT_DIR/sw.js:." --add-data "$PROJECT_DIR/assets:assets" --add-data "$PROJECT_DIR/fonts:fonts" --add-data "$PROJECT_DIR/resources:resources" --add-data "$PROJECT_DIR/tools:tools" "$PROJECT_DIR/desktop_runner.py"
 [[ -d "$APP_PATH" ]] || fail "PyInstaller did not create $APP_PATH."
 plutil -replace CFBundleShortVersionString -string "$APP_VERSION" "$APP_PATH/Contents/Info.plist"
 plutil -replace CFBundleVersion -string "$APP_VERSION" "$APP_PATH/Contents/Info.plist"
