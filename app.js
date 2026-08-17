@@ -328,12 +328,15 @@ function renderMeasurementRows(editing) {
   return html;
 }
 function measurementProgressMarkup() {
-  const cells = measurementBoard.cells.flat();
-  const total = measurementBoard.samples.length * measurementBoard.measurements.length;
-  const notRequired = cells.filter(cell => cell === "not-required").length;
-  const done = cells.filter(cell => cell === "completed").length;
-  const delegated = cells.filter(cell => cell === "delegated").length;
-  const plannedSamples = measurementBoard.samples.reduce((count, _, row) => count + (measurementBoard.cells[row] || []).includes("planned"), 0);
+  const visibleRows = measurementBoard.samples.map((_, row) => row).filter(row =>
+    measurementBoardGroupFilter === "all" || measurementBoard.sampleGroups[row] === measurementBoardGroupFilter
+  );
+  const visibleCells = visibleRows.flatMap(row => measurementBoard.cells[row] || []);
+  const total = visibleRows.length * measurementBoard.measurements.length;
+  const notRequired = visibleCells.filter(cell => cell === "not-required").length;
+  const done = visibleCells.filter(cell => cell === "completed").length;
+  const delegated = visibleCells.filter(cell => cell === "delegated").length;
+  const plannedSamples = visibleRows.filter(row => (measurementBoard.cells[row] || []).includes("planned")).length;
   const effectiveTotal = Math.max(0, total - notRequired);
   const rest = Math.max(0, total - notRequired - done - delegated);
   return '<div class="measurement-progress" aria-label="Measurement progress"><span>Total: <b>' + effectiveTotal + '</b></span><span>Plan: <b>' + plannedSamples + '</b></span><span>Rest: <b>' + rest + '</b></span></div>';
