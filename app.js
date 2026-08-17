@@ -333,10 +333,10 @@ function measurementProgressMarkup() {
   const notRequired = cells.filter(cell => cell === "not-required").length;
   const done = cells.filter(cell => cell === "completed").length;
   const delegated = cells.filter(cell => cell === "delegated").length;
-  const planned = cells.filter(cell => cell === "planned").length;
+  const plannedSamples = measurementBoard.samples.reduce((count, _, row) => count + (measurementBoard.cells[row] || []).includes("planned"), 0);
   const effectiveTotal = Math.max(0, total - notRequired);
   const rest = Math.max(0, total - notRequired - done - delegated);
-  return '<div class="measurement-progress" aria-label="Measurement progress"><span>Total: <b>' + effectiveTotal + '</b></span><span>Plan: <b>' + planned + '</b></span><span>Rest: <b>' + rest + '</b></span></div>';
+  return '<div class="measurement-progress" aria-label="Measurement progress"><span>Total: <b>' + effectiveTotal + '</b></span><span>Plan: <b>' + plannedSamples + '</b></span><span>Rest: <b>' + rest + '</b></span></div>';
 }
 function renderMeasurements() {
   normalizeMeasurementBoard();
